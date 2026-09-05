@@ -149,6 +149,7 @@
       border-radius: 8px;
       font-size: 12px;
       margin-right: 5px;
+      margin-bottom: 5px;
     }
 
     .detail-button {
@@ -160,6 +161,12 @@
       background: #111;
       color: white;
       text-decoration: none;
+    }
+
+    .status {
+      text-align: center;
+      padding: 30px;
+      color: #777;
     }
 
     footer {
@@ -189,6 +196,7 @@
 
   <div class="search-box">
     <input
+      id="searchInput"
       type="text"
       placeholder="ค้นหาคอนโด ทำเล หรือ BTS/MRT"
     >
@@ -202,95 +210,247 @@
 
 </section>
 
+
 <div class="container">
 
-  <h2 class="section-title">คอนโดแนะนำ</h2>
+  <h2 class="section-title">
+    คอนโดแนะนำ
+  </h2>
 
-  <div class="grid">
-
-    <div class="card">
-      <div class="card-image">🏢</div>
-
-      <div class="card-content">
-        <h3>Happy Pet Residence</h3>
-
-        <div class="location">
-          📍 อ่อนนุช • ใกล้ BTS
-        </div>
-
-        <div class="price">
-          ฿15,000 / เดือน
-        </div>
-
-        <div class="pet-tags">
-          <span class="pet-tag">🐶 สุนัข</span>
-          <span class="pet-tag">🐱 แมว</span>
-        </div>
-
-        <a href="condo.html" class="detail-button">
-          ดูรายละเอียด
-        </a>
-      </div>
-    </div>
-
-
-    <div class="card">
-      <div class="card-image">🏙️</div>
-
-      <div class="card-content">
-        <h3>Pet Friendly Sukhumvit</h3>
-
-        <div class="location">
-          📍 พระโขนง • BTS 400 เมตร
-        </div>
-
-        <div class="price">
-          ฿18,500 / เดือน
-        </div>
-
-        <div class="pet-tags">
-          <span class="pet-tag">🐱 แมว</span>
-        </div>
-
-        <a href="#" class="detail-button">
-          ดูรายละเอียด
-        </a>
-      </div>
-    </div>
-
-
-    <div class="card">
-      <div class="card-image">🌇</div>
-
-      <div class="card-content">
-        <h3>Urban Pets Condo</h3>
-
-        <div class="location">
-          📍 รัชดา • ใกล้ MRT
-        </div>
-
-        <div class="price">
-          ฿13,900 / เดือน
-        </div>
-
-        <div class="pet-tags">
-          <span class="pet-tag">🐶 สุนัข</span>
-          <span class="pet-tag">🐱 แมว</span>
-        </div>
-
-        <a href="#" class="detail-button">
-          ดูรายละเอียด
-        </a>
-      </div>
-    </div>
-
+  <div id="status" class="status">
+    กำลังโหลดประกาศ...
   </div>
 
+  <div id="listingGrid" class="grid"></div>
+
 </div>
+
 
 <footer>
   © 2026 Pet Condo
 </footer>
+
+
+<script>
+
+  /* ==========================================
+     ใส่ข้อมูล Supabase ของคุณตรงนี้
+     ========================================== */
+
+  const SUPABASE_URL =
+    "https://bttmrtsfbuuaajpxxadg.supabase.co/rest/v1/";
+
+  const SUPABASE_KEY =
+    "sb_publishable_LYAOus5geJw0WXkhOycJUQ_n0XYPgre";
+
+
+  let allListings = [];
+
+
+  /* ==========================================
+     โหลดข้อมูลจาก Supabase
+     ========================================== */
+
+  async function loadListings() {
+
+    const status = document.getElementById("status");
+
+    try {
+
+      const response = await fetch(
+        `${SUPABASE_URL}/rest/v1/listings?select=*&order=created_at.desc`,
+        {
+          headers: {
+            apikey: SUPABASE_KEY,
+            Authorization: `Bearer ${SUPABASE_KEY}`
+          }
+        }
+      );
+
+
+      if (!response.ok) {
+        throw new Error(
+          "Supabase error: " + response.status
+        );
+      }
+
+
+      const data = await response.json();
+
+      allListings = data;
+
+      showListings(data);
+
+    }
+    catch (error) {
+
+      console.error(error);
+
+      status.style.display = "block";
+
+      status.innerHTML =
+        "❌ ไม่สามารถโหลดข้อมูลจาก Database ได้";
+
+    }
+
+  }
+
+
+  /* ==========================================
+     แสดงรายการคอนโด
+     ========================================== */
+
+  function showListings(listings) {
+
+    const grid =
+      document.getElementById("listingGrid");
+
+    const status =
+      document.getElementById("status");
+
+
+    grid.innerHTML = "";
+
+
+    if (!listings || listings.length === 0) {
+
+      status.style.display = "block";
+
+      status.innerHTML =
+        "ยังไม่มีประกาศคอนโด";
+
+      return;
+    }
+
+
+    status.style.display = "none";
+
+
+    listings.forEach(listing => {
+
+      const card =
+        document.createElement("div");
+
+      card.className = "card";
+
+
+      let petTags = "";
+
+
+      if (listing.pet_dog === true) {
+
+        petTags += `
+          <span class="pet-tag">
+            🐶 สุนัข
+          </span>
+        `;
+
+      }
+
+
+      if (listing.pet_cat === true) {
+
+        petTags += `
+          <span class="pet-tag">
+            🐱 แมว
+          </span>
+        `;
+
+      }
+
+
+      const price =
+        Number(listing.price || 0)
+        .toLocaleString("th-TH");
+
+
+      card.innerHTML = `
+
+        <div class="card-image">
+          🏢
+        </div>
+
+        <div class="card-content">
+
+          <h3>
+            ${listing.condo_name || "ไม่ระบุชื่อคอนโด"}
+          </h3>
+
+          <div class="location">
+            📍 ${listing.location || "ไม่ระบุทำเล"}
+          </div>
+
+          <div class="price">
+            ฿${price} / เดือน
+          </div>
+
+          <div class="pet-tags">
+            ${petTags}
+          </div>
+
+          <a
+            href="condo.html?id=${listing.id}"
+            class="detail-button"
+          >
+            ดูรายละเอียด
+          </a>
+
+        </div>
+
+      `;
+
+
+      grid.appendChild(card);
+
+    });
+
+  }
+
+
+  /* ==========================================
+     Search
+     ========================================== */
+
+  document
+    .getElementById("searchInput")
+    .addEventListener("input", function() {
+
+      const keyword =
+        this.value
+        .toLowerCase()
+        .trim();
+
+
+      const filtered =
+        allListings.filter(listing => {
+
+          const name =
+            (listing.condo_name || "")
+            .toLowerCase();
+
+          const location =
+            (listing.location || "")
+            .toLowerCase();
+
+
+          return (
+            name.includes(keyword) ||
+            location.includes(keyword)
+          );
+
+        });
+
+
+      showListings(filtered);
+
+    });
+
+
+  /* โหลดข้อมูลตอนเปิดเว็บ */
+
+  loadListings();
+
+</script>
 
 </body>
 </html>
