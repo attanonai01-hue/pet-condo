@@ -18,39 +18,26 @@
 
     body {
       margin: 0;
-
-      font-family:
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        sans-serif;
-
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       background: #f6f6f6;
       color: #222;
     }
 
     header {
       background: white;
-
       padding: 16px 20px;
-
       display: flex;
-
       justify-content: space-between;
       align-items: center;
-
       border-bottom: 1px solid #eee;
-
       position: sticky;
       top: 0;
-
       z-index: 10;
     }
 
     .logo {
       font-size: 22px;
       font-weight: 700;
-
       color: #222;
       text-decoration: none;
     }
@@ -58,54 +45,40 @@
     .post-btn {
       background: #111;
       color: white;
-
       padding: 11px 15px;
-
       border-radius: 12px;
-
       text-decoration: none;
       font-weight: 600;
     }
 
     .hero {
       background: white;
-
       text-align: center;
-
       padding: 45px 20px 35px;
     }
 
     .hero h1 {
       margin: 0 0 10px;
-
       font-size: 32px;
-
       line-height: 1.3;
     }
 
     .hero p {
       margin: 0;
-
       color: #777;
     }
 
     .search-wrap {
       max-width: 620px;
-
       margin: 24px auto 0;
     }
 
     .search-input {
       width: 100%;
-
       padding: 16px;
-
       border: 1px solid #ddd;
-
       border-radius: 14px;
-
       font-size: 16px;
-
       outline: none;
     }
 
@@ -119,94 +92,78 @@
 
     .filter {
       display: inline-block;
-
       margin: 4px;
-
       padding: 9px 13px;
-
       background: #f1f1f1;
-
       border-radius: 999px;
-
       font-size: 14px;
     }
 
     .container {
       width: 100%;
-
       max-width: 1000px;
-
       margin: auto;
-
       padding: 26px 16px 45px;
     }
 
     .section-title {
       margin: 0 0 18px;
-
       font-size: 24px;
     }
 
     #status {
       text-align: center;
-
       padding: 30px 15px;
-
       color: #777;
     }
 
     #status.error {
       color: #b42318;
-
       background: #fff0ee;
-
       border-radius: 14px;
-
       padding: 18px;
-
       word-break: break-word;
     }
 
     .grid {
       display: grid;
-
-      grid-template-columns:
-        repeat(
-          auto-fit,
-          minmax(260px, 1fr)
-        );
-
+      grid-template-columns: repeat(
+        auto-fit,
+        minmax(260px, 1fr)
+      );
       gap: 18px;
     }
 
     .card {
       background: white;
-
       border-radius: 18px;
-
       overflow: hidden;
-
-      box-shadow:
-        0 2px 14px
-        rgba(0, 0, 0, 0.07);
+      box-shadow: 0 2px 14px rgba(0,0,0,.07);
     }
 
     .card-image {
-      height: 180px;
-
-      background:
-        linear-gradient(
-          135deg,
-          #eeeeee,
-          #d5d5d5
-        );
+      width: 100%;
+      height: 220px;
+      background: linear-gradient(
+        135deg,
+        #eeeeee,
+        #d5d5d5
+      );
 
       display: flex;
-
       justify-content: center;
       align-items: center;
 
       font-size: 60px;
+
+      overflow: hidden;
+    }
+
+    .card-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
     }
 
     .card-content {
@@ -215,15 +172,12 @@
 
     .card-title {
       margin: 0 0 8px;
-
       font-size: 20px;
     }
 
     .location {
       color: #777;
-
       line-height: 1.5;
-
       margin-bottom: 10px;
     }
 
@@ -233,60 +187,41 @@
 
     .pet-tag {
       display: inline-block;
-
       background: #f2f2f2;
-
       padding: 7px 10px;
-
       border-radius: 10px;
-
       margin-right: 5px;
       margin-bottom: 5px;
-
       font-size: 13px;
     }
 
     .details {
       color: #666;
-
       font-size: 14px;
-
       margin-top: 8px;
     }
 
     .price {
       margin-top: 12px;
-
       font-size: 20px;
-
       font-weight: 700;
     }
 
     .detail-btn {
       display: block;
-
       margin-top: 16px;
-
       padding: 12px;
-
       background: #111;
-
       color: white;
-
       border-radius: 12px;
-
       text-align: center;
-
       text-decoration: none;
-
       font-weight: 600;
     }
 
     footer {
       text-align: center;
-
       padding: 30px 16px 40px;
-
       color: #999;
     }
 
@@ -307,9 +242,14 @@
       .post-btn {
         padding: 10px 13px;
       }
+
+      .card-image {
+        height: 210px;
+      }
     }
   </style>
 </head>
+
 
 <body>
 
@@ -341,10 +281,8 @@
     หาคอนโดที่สัตว์เลี้ยงอยู่ได้
   </h1>
 
-
   <p>
-    ค้นหาบ้านที่ใช่
-    สำหรับคุณและเพื่อนตัวน้อย 🐶🐱
+    ค้นหาบ้านที่ใช่ สำหรับคุณและเพื่อนตัวน้อย 🐶🐱
   </p>
 
 
@@ -382,7 +320,6 @@
 
 <main class="container">
 
-
   <h2 class="section-title">
     คอนโดแนะนำ
   </h2>
@@ -398,7 +335,6 @@
     class="grid"
   ></div>
 
-
 </main>
 
 
@@ -411,7 +347,6 @@
 
 <script>
 
-
 let allListings = [];
 
 
@@ -419,31 +354,11 @@ let allListings = [];
 function escapeHTML(value) {
 
   return String(value ?? "")
-
-    .replaceAll(
-      "&",
-      "&amp;"
-    )
-
-    .replaceAll(
-      "<",
-      "&lt;"
-    )
-
-    .replaceAll(
-      ">",
-      "&gt;"
-    )
-
-    .replaceAll(
-      '"',
-      "&quot;"
-    )
-
-    .replaceAll(
-      "'",
-      "&#039;"
-    );
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
 
 }
 
@@ -451,11 +366,102 @@ function escapeHTML(value) {
 
 function formatPrice(value) {
 
-  return Number(
-    value || 0
-  ).toLocaleString(
-    "th-TH"
+  return Number(value || 0)
+    .toLocaleString("th-TH");
+
+}
+
+
+
+function safeImageUrl(value) {
+
+  if (!value) {
+    return null;
+  }
+
+  try {
+
+    const url =
+      new URL(value);
+
+    if (
+      url.protocol !== "http:" &&
+      url.protocol !== "https:"
+    ) {
+      return null;
+    }
+
+    return url.href;
+
+  }
+
+  catch {
+    return null;
+  }
+
+}
+
+
+
+function createImage(item) {
+
+  const imageBox =
+    document.createElement("div");
+
+  imageBox.className =
+    "card-image";
+
+
+  const imageUrl =
+    safeImageUrl(
+      item.image_url
+    );
+
+
+  if (!imageUrl) {
+
+    imageBox.textContent =
+      "🏢";
+
+    return imageBox;
+  }
+
+
+  const img =
+    document.createElement("img");
+
+
+  img.src =
+    imageUrl;
+
+
+  img.alt =
+    item.condo_name ||
+    "รูปคอนโด";
+
+
+  img.loading =
+    "lazy";
+
+
+  img.onerror =
+    function() {
+
+      imageBox.innerHTML =
+        "";
+
+      imageBox.textContent =
+        "🏢";
+
+    };
+
+
+  imageBox.appendChild(
+    img
   );
+
+
+  return imageBox;
 
 }
 
@@ -466,20 +472,19 @@ function renderListings(
 ) {
 
   const grid =
-    document
-      .getElementById(
-        "listingGrid"
-      );
+    document.getElementById(
+      "listingGrid"
+    );
 
 
   const status =
-    document
-      .getElementById(
-        "status"
-      );
+    document.getElementById(
+      "status"
+    );
 
 
-  grid.innerHTML = "";
+  grid.innerHTML =
+    "";
 
 
   if (
@@ -491,18 +496,14 @@ function renderListings(
     status.style.display =
       "block";
 
-
     status.className =
       "error";
 
-
-    status.innerHTML =
+    status.textContent =
       "❌ รูปแบบข้อมูลจาก API ไม่ถูกต้อง";
-
 
     return;
   }
-
 
 
   if (
@@ -512,22 +513,18 @@ function renderListings(
     status.style.display =
       "block";
 
+    status.className =
+      "";
 
-    status.className = "";
-
-
-    status.innerHTML =
+    status.textContent =
       "ไม่พบประกาศ";
-
 
     return;
   }
 
 
-
   status.style.display =
     "none";
-
 
 
   listings.forEach(
@@ -544,9 +541,29 @@ function renderListings(
         "card";
 
 
+      const imageBox =
+        createImage(
+          item
+        );
 
-      let petTags = "";
 
+      card.appendChild(
+        imageBox
+      );
+
+
+      const content =
+        document.createElement(
+          "div"
+        );
+
+
+      content.className =
+        "card-content";
+
+
+      let petTags =
+        "";
 
 
       if (
@@ -554,15 +571,12 @@ function renderListings(
       ) {
 
         petTags += `
-
           <span class="pet-tag">
             🐶 สุนัข
           </span>
-
         `;
 
       }
-
 
 
       if (
@@ -570,19 +584,16 @@ function renderListings(
       ) {
 
         petTags += `
-
           <span class="pet-tag">
             🐱 แมว
           </span>
-
         `;
 
       }
 
 
-
-      const details = [];
-
+      const details =
+        [];
 
 
       if (
@@ -597,7 +608,6 @@ function renderListings(
       }
 
 
-
       if (
         item.bathrooms !== null &&
         item.bathrooms !== undefined
@@ -608,7 +618,6 @@ function renderListings(
         );
 
       }
-
 
 
       if (
@@ -623,91 +632,72 @@ function renderListings(
       }
 
 
-
       const detailText =
         details.join(" • ");
 
 
+      content.innerHTML = `
 
-      card.innerHTML = `
+        <h3 class="card-title">
+          ${escapeHTML(
+            item.condo_name ||
+            "ไม่ระบุชื่อ"
+          )}
+        </h3>
 
-        <div class="card-image">
-          🏢
+
+        <div class="location">
+
+          📍 ${escapeHTML(
+            item.location ||
+            "ไม่ระบุทำเล"
+          )}
+
+        </div>
+
+
+        <div class="pet-tags">
+          ${petTags}
         </div>
 
 
-        <div class="card-content">
+        ${
+          detailText
+            ? `
+              <div class="details">
+                ${escapeHTML(
+                  detailText
+                )}
+              </div>
+            `
+            : ""
+        }
 
 
-          <h3 class="card-title">
+        <div class="price">
 
-            ${escapeHTML(
-              item.condo_name ||
-              "ไม่ระบุชื่อ"
-            )}
-
-          </h3>
-
-
-          <div class="location">
-
-            📍 ${escapeHTML(
-              item.location ||
-              "ไม่ระบุทำเล"
-            )}
-
-          </div>
-
-
-          <div class="pet-tags">
-
-            ${petTags}
-
-          </div>
-
-
-          ${
-            detailText
-              ? `
-
-                <div class="details">
-
-                  ${escapeHTML(
-                    detailText
-                  )}
-
-                </div>
-
-              `
-              : ""
-          }
-
-
-          <div class="price">
-
-            ฿${formatPrice(
-              item.price
-            )} / เดือน
-
-          </div>
-
-
-          <a
-            href="/condo.html?id=${encodeURIComponent(
-              item.id || ""
-            )}"
-            class="detail-btn"
-          >
-
-            ดูรายละเอียด
-
-          </a>
-
+          ฿${formatPrice(
+            item.price
+          )} / เดือน
 
         </div>
+
+
+        <a
+          href="/condo.html?id=${encodeURIComponent(
+            item.id || ""
+          )}"
+          class="detail-btn"
+        >
+          ดูรายละเอียด
+        </a>
 
       `;
 
+
+      card.appendChild(
+        content
+      );
 
 
       grid.appendChild(
@@ -724,20 +714,20 @@ function renderListings(
 async function loadListings() {
 
   const status =
-    document
-      .getElementById(
-        "status"
-      );
+    document.getElementById(
+      "status"
+    );
 
 
   status.style.display =
     "block";
 
 
-  status.className = "";
+  status.className =
+    "";
 
 
-  status.innerHTML =
+  status.textContent =
     "กำลังโหลดประกาศ...";
 
 
@@ -748,33 +738,22 @@ async function loadListings() {
       await fetch(
         "/api/listings",
         {
-
-          method:
-            "GET",
-
-          cache:
-            "no-store",
+          method: "GET",
+          cache: "no-store",
 
           headers: {
-
-            "Accept":
+            Accept:
               "application/json"
-
           }
-
         }
       );
 
 
+    if (!response.ok) {
 
-    const text =
-      await response.text();
+      const text =
+        await response.text();
 
-
-
-    if (
-      !response.ok
-    ) {
 
       throw new Error(
         `HTTP ${response.status}: ${text}`
@@ -783,46 +762,30 @@ async function loadListings() {
     }
 
 
+    const data =
+      await response.json();
 
-    let data;
 
-
-
-    try {
-
-      data =
-        JSON.parse(
-          text
-        );
-
-    }
-
-    catch {
+    if (
+      !Array.isArray(
+        data
+      )
+    ) {
 
       throw new Error(
-        "API ไม่ได้ส่งข้อมูล JSON กลับมา"
+        "ข้อมูลจาก API ไม่ถูกต้อง"
       );
 
     }
-
-
-
-    console.log(
-      "ข้อมูลจาก Supabase:",
-      data
-    );
-
 
 
     allListings =
       data;
 
 
-
     renderListings(
       allListings
     );
-
 
 
   }
@@ -876,7 +839,6 @@ document
           .toLowerCase();
 
 
-
       if (!keyword) {
 
         renderListings(
@@ -884,9 +846,7 @@ document
         );
 
         return;
-
       }
-
 
 
       const filtered =
@@ -901,7 +861,6 @@ document
               .toLowerCase();
 
 
-
             const location =
               String(
                 item.location || ""
@@ -909,13 +868,11 @@ document
               .toLowerCase();
 
 
-
             const description =
               String(
                 item.description || ""
               )
               .toLowerCase();
-
 
 
             return (
@@ -942,7 +899,6 @@ document
         );
 
 
-
       renderListings(
         filtered
       );
@@ -953,7 +909,6 @@ document
 
 
 loadListings();
-
 
 </script>
 
