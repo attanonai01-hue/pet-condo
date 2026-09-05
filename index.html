@@ -32,37 +32,35 @@
 
     .logo {
       font-size: 22px;
-      font-weight: bold;
+      font-weight: 700;
     }
 
     .post-button {
       background: #111;
       color: white;
-      padding: 10px 14px;
-      border-radius: 10px;
+      padding: 11px 15px;
+      border-radius: 12px;
       text-decoration: none;
-      font-size: 14px;
     }
 
     .hero {
-      padding: 45px 20px 30px;
-      text-align: center;
       background: white;
+      text-align: center;
+      padding: 45px 20px 35px;
     }
 
     .hero h1 {
       font-size: 32px;
-      margin-bottom: 10px;
+      margin: 0 0 10px;
     }
 
     .hero p {
-      color: #666;
-      margin-bottom: 25px;
+      color: #777;
     }
 
     .search-box {
       max-width: 600px;
-      margin: auto;
+      margin: 25px auto 0;
     }
 
     .search-box input {
@@ -79,9 +77,9 @@
 
     .filter {
       display: inline-block;
+      background: #f2f2f2;
       padding: 9px 14px;
       margin: 4px;
-      background: #f1f1f1;
       border-radius: 20px;
       font-size: 14px;
     }
@@ -90,11 +88,6 @@
       max-width: 1000px;
       margin: auto;
       padding: 25px 16px;
-    }
-
-    .section-title {
-      font-size: 22px;
-      margin-bottom: 18px;
     }
 
     .grid {
@@ -107,7 +100,7 @@
       background: white;
       border-radius: 16px;
       overflow: hidden;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+      box-shadow: 0 2px 12px rgba(0,0,0,.07);
     }
 
     .card-image {
@@ -120,7 +113,7 @@
     }
 
     .card-content {
-      padding: 16px;
+      padding: 17px;
     }
 
     .card h3 {
@@ -129,13 +122,12 @@
 
     .location {
       color: #777;
-      font-size: 14px;
     }
 
     .price {
-      margin-top: 12px;
-      font-size: 18px;
+      font-size: 19px;
       font-weight: bold;
+      margin-top: 12px;
     }
 
     .pet-tags {
@@ -144,37 +136,35 @@
 
     .pet-tag {
       display: inline-block;
-      background: #f4f4f4;
-      padding: 6px 9px;
-      border-radius: 8px;
-      font-size: 12px;
+      padding: 7px 10px;
+      background: #f2f2f2;
+      border-radius: 9px;
       margin-right: 5px;
       margin-bottom: 5px;
+      font-size: 13px;
     }
 
     .detail-button {
       display: block;
-      margin-top: 15px;
       text-align: center;
-      padding: 11px;
-      border-radius: 10px;
+      margin-top: 15px;
+      padding: 12px;
       background: #111;
       color: white;
       text-decoration: none;
+      border-radius: 11px;
     }
 
     .status {
       text-align: center;
-      padding: 30px;
+      padding: 35px;
       color: #777;
     }
 
     footer {
-      margin-top: 30px;
-      padding: 30px;
       text-align: center;
-      color: #888;
-      font-size: 13px;
+      color: #999;
+      padding: 30px;
     }
   </style>
 </head>
@@ -190,9 +180,7 @@
 
   <h1>หาคอนโดที่สัตว์เลี้ยงอยู่ได้</h1>
 
-  <p>
-    ค้นหาบ้านที่ใช่ สำหรับคุณและเพื่อนตัวน้อย 🐶🐱
-  </p>
+  <p>ค้นหาบ้านที่ใช่ สำหรับคุณและเพื่อนตัวน้อย 🐶🐱</p>
 
   <div class="search-box">
     <input
@@ -210,12 +198,9 @@
 
 </section>
 
-
 <div class="container">
 
-  <h2 class="section-title">
-    คอนโดแนะนำ
-  </h2>
+  <h2>คอนโดแนะนำ</h2>
 
   <div id="status" class="status">
     กำลังโหลดประกาศ...
@@ -225,229 +210,230 @@
 
 </div>
 
-
 <footer>
   © 2026 Pet Condo
 </footer>
 
-
 <script>
 
-  /* ==========================================
-     ใส่ข้อมูล Supabase ของคุณตรงนี้
-     ========================================== */
+const SUPABASE_URL =
+  "https://bttmrtsfbuuaajpxxadg.supabase.co";
 
-  const SUPABASE_URL =
-    "https://bttmrtsfbuuaajpxxadg.supabase.co/rest/v1/";
+const SUPABASE_KEY =
+  "sb_publishable_LYAOus5geJw0WXkhOycJUQ_n0XYPgre";
 
-  const SUPABASE_KEY =
-    "sb_publishable_LYAOus5geJw0WXkhOycJUQ_n0XYPgre";
+let allListings = [];
 
 
-  let allListings = [];
+/* โหลดประกาศจาก Supabase */
 
+async function loadListings() {
 
-  /* ==========================================
-     โหลดข้อมูลจาก Supabase
-     ========================================== */
+  const status =
+    document.getElementById("status");
 
-  async function loadListings() {
+  try {
 
-    const status = document.getElementById("status");
-
-    try {
-
-      const response = await fetch(
-        ``${SUPABASE_URL}/rest/v1/listings?select=*``,
-        {
-          headers: {
-            apikey: SUPABASE_KEY
-          }
+    const response = await fetch(
+      `${SUPABASE_URL}/rest/v1/listings?select=*`,
+      {
+        method: "GET",
+        headers: {
+          "apikey": SUPABASE_KEY
         }
+      }
+    );
+
+    const responseText =
+      await response.text();
+
+
+    if (!response.ok) {
+
+      throw new Error(
+        `HTTP ${response.status}: ${responseText}`
       );
 
-
-      if (!response.ok) {
-        throw new Error(
-          "Supabase error: " + response.status
-        );
-      }
-
-
-      const data = await response.json();
-
-      allListings = data;
-
-      showListings(data);
-
     }
-    catch (error) {
 
-      console.error(error);
 
-      status.style.display = "block";
+    const data =
+      JSON.parse(responseText);
 
-      status.innerHTML =
-        "❌ ไม่สามารถโหลดข้อมูลจาก Database ได้";
 
-    }
+    allListings = data;
+
+    showListings(data);
+
+  }
+
+  catch (error) {
+
+    console.error(error);
+
+    status.style.display = "block";
+
+    status.innerHTML =
+      "❌ โหลดประกาศไม่สำเร็จ<br><small>" +
+      error.message +
+      "</small>";
+
+  }
+
+}
+
+
+/* แสดงประกาศ */
+
+function showListings(listings) {
+
+  const grid =
+    document.getElementById("listingGrid");
+
+  const status =
+    document.getElementById("status");
+
+
+  grid.innerHTML = "";
+
+
+  if (!listings || listings.length === 0) {
+
+    status.style.display = "block";
+    status.textContent = "ยังไม่มีประกาศ";
+
+    return;
 
   }
 
 
-  /* ==========================================
-     แสดงรายการคอนโด
-     ========================================== */
-
-  function showListings(listings) {
-
-    const grid =
-      document.getElementById("listingGrid");
-
-    const status =
-      document.getElementById("status");
+  status.style.display = "none";
 
 
-    grid.innerHTML = "";
+  listings.forEach(listing => {
+
+    const card =
+      document.createElement("div");
+
+    card.className = "card";
 
 
-    if (!listings || listings.length === 0) {
+    const price =
+      Number(listing.price || 0)
+      .toLocaleString("th-TH");
 
-      status.style.display = "block";
 
-      status.innerHTML =
-        "ยังไม่มีประกาศคอนโด";
+    let petTags = "";
 
-      return;
+
+    if (listing.pet_dog) {
+
+      petTags +=
+        `<span class="pet-tag">
+          🐶 สุนัข
+        </span>`;
+
     }
 
 
-    status.style.display = "none";
+    if (listing.pet_cat) {
+
+      petTags +=
+        `<span class="pet-tag">
+          🐱 แมว
+        </span>`;
+
+    }
 
 
-    listings.forEach(listing => {
+    card.innerHTML = `
 
-      const card =
-        document.createElement("div");
+      <div class="card-image">
+        🏢
+      </div>
 
-      card.className = "card";
+      <div class="card-content">
 
+        <h3>
+          ${listing.condo_name || "ไม่ระบุชื่อ"}
+        </h3>
 
-      let petTags = "";
-
-
-      if (listing.pet_dog === true) {
-
-        petTags += `
-          <span class="pet-tag">
-            🐶 สุนัข
-          </span>
-        `;
-
-      }
-
-
-      if (listing.pet_cat === true) {
-
-        petTags += `
-          <span class="pet-tag">
-            🐱 แมว
-          </span>
-        `;
-
-      }
-
-
-      const price =
-        Number(listing.price || 0)
-        .toLocaleString("th-TH");
-
-
-      card.innerHTML = `
-
-        <div class="card-image">
-          🏢
+        <div class="location">
+          📍 ${listing.location || "ไม่ระบุทำเล"}
         </div>
 
-        <div class="card-content">
-
-          <h3>
-            ${listing.condo_name || "ไม่ระบุชื่อคอนโด"}
-          </h3>
-
-          <div class="location">
-            📍 ${listing.location || "ไม่ระบุทำเล"}
-          </div>
-
-          <div class="price">
-            ฿${price} / เดือน
-          </div>
-
-          <div class="pet-tags">
-            ${petTags}
-          </div>
-
-          <a
-            href="condo.html?id=${listing.id}"
-            class="detail-button"
-          >
-            ดูรายละเอียด
-          </a>
-
+        <div class="price">
+          ฿${price} / เดือน
         </div>
 
-      `;
+        <div class="pet-tags">
+          ${petTags}
+        </div>
+
+        <a
+          href="condo.html?id=${listing.id}"
+          class="detail-button"
+        >
+          ดูรายละเอียด
+        </a>
+
+      </div>
+
+    `;
 
 
-      grid.appendChild(card);
+    grid.appendChild(card);
 
-    });
+  });
 
-  }
-
-
-  /* ==========================================
-     Search
-     ========================================== */
-
-  document
-    .getElementById("searchInput")
-    .addEventListener("input", function() {
-
-      const keyword =
-        this.value
-        .toLowerCase()
-        .trim();
+}
 
 
-      const filtered =
-        allListings.filter(listing => {
+/* Search */
 
-          const name =
-            (listing.condo_name || "")
+document
+.getElementById("searchInput")
+.addEventListener(
+  "input",
+  function () {
+
+    const keyword =
+      this.value
+      .toLowerCase()
+      .trim();
+
+
+    const filtered =
+      allListings.filter(
+        listing => {
+
+          const condo =
+            String(listing.condo_name || "")
             .toLowerCase();
 
           const location =
-            (listing.location || "")
+            String(listing.location || "")
             .toLowerCase();
 
 
           return (
-            name.includes(keyword) ||
+            condo.includes(keyword) ||
             location.includes(keyword)
           );
 
-        });
+        }
+      );
 
 
-      showListings(filtered);
+    showListings(filtered);
 
-    });
+  }
+);
 
 
-  /* โหลดข้อมูลตอนเปิดเว็บ */
+/* เริ่มโหลด */
 
-  loadListings();
+loadListings();
 
 </script>
 
