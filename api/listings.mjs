@@ -1,5 +1,4 @@
-function getSupabaseConfig() {
-
+function getConfig() {
   const rawUrl =
     process.env.NEXT_PUBLIC_SUPABASE_URL || "";
 
@@ -10,35 +9,178 @@ function getSupabaseConfig() {
     .replace(/\/rest\/v1\/?$/i, "")
     .replace(/\/+$/, "");
 
+  return { url, key };
+}
+
+
+function json(data, status = 200) {
+  return new Response(
+    JSON.stringify(data),
+    {
+      status,
+      headers: {
+        "Content-Type":
+          "application/json; charset=utf-8",
+        "Cache-Control":
+          "no-store"
+      }
+    }
+  );
+}
+
+
+function cleanString(value, maxLength) {
+  return String(value || "")
+    .trim()
+    .slice(0, maxLength);
+}
+
+
+function numberOrNull(
+  value,
+  min,
+  max
+) {
+  if (
+    value === null ||
+    value === undefined ||
+    value === ""
+  ) {
+    return null;
+  }
+
+  const number =
+    Number(value);
+
+  if (
+    !Number.isFinite(number) ||
+    number < min ||
+    number > max
+  ) {
+    return null;
+  }
+
+  return number;
+}
+
+
+/* =====================================
+   VERIFY USER JWT
+===================================== */
+
+async function verifyUser(
+  request,
+  url,
+  key
+) {
+
+  const authHeader =
+    request.headers.get(
+      "authorization"
+    ) || "";
+
+
+  if (
+    !authHeader.startsWith(
+      "Bearer "
+    )
+  ) {
+
+    throw new Error(
+      "UNAUTHORIZED"
+    );
+  }
+
+
+  const token =
+    authHeader.slice(7);
+
+
+  if (!token) {
+
+    throw new Error(
+      "UNAUTHORIZED"
+    );
+  }
+
+
+  const response =
+    await fetch(
+      `${url}/auth/v1/user`,
+      {
+        method: "GET",
+
+        headers: {
+          apikey: key,
+          Authorization:
+            `Bearer ${token}`
+        },
+
+        cache: "no-store"
+      }
+    );
+
+
+  if (!response.ok) {
+
+    throw new Error(
+      "UNAUTHORIZED"
+    );
+  }
+
+
+  const user =
+    await response.json();
+
+
+  if (
+    !user ||
+    !user.id
+  ) {
+
+    throw new Error(
+      "UNAUTHORIZED"
+    );
+  }
+
+
+  if (
+    !user.email_confirmed_at &&
+    !user.confirmed_at
+  ) {
+
+    throw new Error(
+      "EMAIL_NOT_VERIFIED"
+    );
+  }
+
+
   return {
-    url,
-    key
+    user,
+    token
   };
 }
 
 
-/* =========================
-   GET ALL LISTINGS
-========================= */
+/* =====================================
+   GET PUBLIC LISTINGS
+===================================== */
 
 export async function GET() {
 
   const { url, key } =
-    getSupabaseConfig();
+    getConfig();
 
 
   if (!url || !key) {
 
-    return Response.json(
+    return json(
       {
         error:
-          "Supabase environment variables are missing"
+          "Server configuration error"
       },
-      {
-        status: 500
-      }
+      500
     );
-
   }
 
 
@@ -58,10 +200,12 @@ export async function GET() {
 
           headers: {
             apikey: key,
-            Accept: "application/json"
+            Accept:
+              "application/json"
           },
 
-          cache: "no-store"
+          cache:
+            "no-store"
         }
       );
 
@@ -72,19 +216,20 @@ export async function GET() {
 
     if (!response.ok) {
 
-      return new Response(
-        text,
-        {
-          status:
-            response.status,
-
-          headers: {
-            "Content-Type":
-              "application/json; charset=utf-8"
-          }
-        }
+      console.error(
+        "Supabase GET error:",
+        response.status,
+        text
       );
 
+
+      return json(
+        {
+          error:
+            "ไม่สามารถโหลดประกาศได้"
+        },
+        response.status
+      );
     }
 
 
@@ -98,7 +243,7 @@ export async function GET() {
             "application/json; charset=utf-8",
 
           "Cache-Control":
-            "no-store"
+            "public, max-age=0, s-maxage=30, stale-while-revalidate=60"
         }
       }
     );
@@ -107,62 +252,209 @@ export async function GET() {
 
   catch(error) {
 
-    return Response.json(
+    console.error(error);
+
+    return json(
       {
         error:
-          error.message
+          "Server error"
       },
-      {
-        status: 500
-      }
+      500
     );
-
   }
-
 }
 
 
-/* =========================
+/* =====================================
    CREATE LISTING
-========================= */
+===================================== */
 
-export async function POST(request) {
+export async function POST(
+  request
+) {
 
   const { url, key } =
-    getSupabaseConfig();
+    getConfig();
 
 
   if (!url || !key) {
 
-    return Response.json(
+    return json(
       {
         error:
-          "Supabase environment variables are missing"
+          "Server configuration error"
       },
-      {
-        status: 500
-      }
+      500
     );
-
   }
 
 
   try {
 
-    const body =
-      await request.json();
+    /* -----------------------
+       CHECK CONTENT TYPE
+    ----------------------- */
 
+    const contentType =
+      request.headers.get(
+        "content-type"
+      ) || "";
+
+
+    if (
+      !contentType.includes(
+        "application/json"
+      )
+    ) {
+
+      return json(
+        {
+          error:
+            "Invalid content type"
+        },
+        415
+      );
+    }
+
+
+    /* -----------------------
+       BODY SIZE PROTECTION
+    ----------------------- */
+
+    const contentLength =
+      Number(
+        request.headers.get(
+          "content-length"
+        ) || 0
+      );
+
+
+    if (
+      contentLength >
+      32 * 1024
+    ) {
+
+      return json(
+        {
+          error:
+            "Request too large"
+        },
+        413
+      );
+    }
+
+
+    /* -----------------------
+       VERIFY AUTH
+    ----------------------- */
+
+    let auth;
+
+
+    try {
+
+      auth =
+        await verifyUser(
+          request,
+          url,
+          key
+        );
+
+    }
+
+    catch(error) {
+
+      if (
+        error.message ===
+        "EMAIL_NOT_VERIFIED"
+      ) {
+
+        return json(
+          {
+            error:
+              "กรุณายืนยัน Email ก่อนลงประกาศ"
+          },
+          403
+        );
+
+      }
+
+
+      return json(
+        {
+          error:
+            "กรุณาเข้าสู่ระบบ"
+        },
+        401
+      );
+
+    }
+
+
+    const {
+      user,
+      token
+    } =
+      auth;
+
+
+    /* -----------------------
+       PARSE BODY
+    ----------------------- */
+
+    let body;
+
+
+    try {
+
+      body =
+        await request.json();
+
+    }
+
+    catch {
+
+      return json(
+        {
+          error:
+            "ข้อมูลไม่ถูกต้อง"
+        },
+        400
+      );
+
+    }
+
+
+    /* -----------------------
+       VALIDATION
+    ----------------------- */
 
     const condoName =
-      String(
-        body.condo_name || ""
-      ).trim();
+      cleanString(
+        body.condo_name,
+        120
+      );
 
 
     const location =
-      String(
-        body.location || ""
-      ).trim();
+      cleanString(
+        body.location,
+        200
+      );
+
+
+    const description =
+      cleanString(
+        body.description,
+        5000
+      );
+
+
+    const contact =
+      cleanString(
+        body.contact,
+        300
+      );
 
 
     const price =
@@ -171,31 +463,31 @@ export async function POST(request) {
       );
 
 
-    if (!condoName) {
+    if (
+      condoName.length < 2
+    ) {
 
-      return Response.json(
+      return json(
         {
           error:
             "กรุณากรอกชื่อคอนโด"
         },
-        {
-          status: 400
-        }
+        400
       );
 
     }
 
 
-    if (!location) {
+    if (
+      location.length < 2
+    ) {
 
-      return Response.json(
+      return json(
         {
           error:
             "กรุณากรอกทำเล"
         },
-        {
-          status: 400
-        }
+        400
       );
 
     }
@@ -203,21 +495,24 @@ export async function POST(request) {
 
     if (
       !Number.isFinite(price) ||
-      price <= 0
+      price <= 0 ||
+      price > 10000000
     ) {
 
-      return Response.json(
+      return json(
         {
           error:
-            "กรุณากรอกราคาให้ถูกต้อง"
+            "ราคาไม่ถูกต้อง"
         },
-        {
-          status: 400
-        }
+        400
       );
 
     }
 
+
+    /* -----------------------
+       VALIDATE IMAGES
+    ----------------------- */
 
     let imageUrls = [];
 
@@ -231,28 +526,57 @@ export async function POST(request) {
       imageUrls =
         body.image_urls
           .filter(
-            function(value) {
-
-              return (
-                typeof value === "string" &&
-                /^https?:\/\//i.test(value)
-              );
-
-            }
+            value =>
+              typeof value ===
+              "string"
           )
           .slice(0, 10);
 
     }
 
 
-    const coverImage =
-      imageUrls[0] ||
-      String(
-        body.image_url || ""
-      ).trim();
+    const allowedPrefix =
+      `${url}/storage/v1/object/public/listing-images/${user.id}/`;
 
+
+    for (
+      const imageUrl
+      of imageUrls
+    ) {
+
+      if (
+        !imageUrl.startsWith(
+          allowedPrefix
+        )
+      ) {
+
+        return json(
+          {
+            error:
+              "พบ URL รูปภาพที่ไม่ได้รับอนุญาต"
+          },
+          400
+        );
+
+      }
+
+    }
+
+
+    const coverImage =
+      imageUrls[0] || null;
+
+
+    /* -----------------------
+       IMPORTANT:
+       owner_id มาจาก User ที่
+       Auth server ยืนยันแล้วเท่านั้น
+    ----------------------- */
 
     const listingPayload = {
+
+      owner_id:
+        user.id,
 
       condo_name:
         condoName,
@@ -264,28 +588,32 @@ export async function POST(request) {
         price,
 
       bedrooms:
-        body.bedrooms === null ||
-        body.bedrooms === undefined
-          ? null
-          : Number(body.bedrooms),
+        numberOrNull(
+          body.bedrooms,
+          0,
+          20
+        ),
 
       bathrooms:
-        body.bathrooms === null ||
-        body.bathrooms === undefined
-          ? null
-          : Number(body.bathrooms),
+        numberOrNull(
+          body.bathrooms,
+          0,
+          20
+        ),
 
       size_sqm:
-        body.size_sqm === null ||
-        body.size_sqm === undefined
-          ? null
-          : Number(body.size_sqm),
+        numberOrNull(
+          body.size_sqm,
+          0,
+          10000
+        ),
 
       floor:
-        body.floor === null ||
-        body.floor === undefined
-          ? null
-          : Number(body.floor),
+        numberOrNull(
+          body.floor,
+          -10,
+          300
+        ),
 
       pet_dog:
         body.pet_dog === true,
@@ -294,14 +622,10 @@ export async function POST(request) {
         body.pet_cat === true,
 
       description:
-        String(
-          body.description || ""
-        ).trim(),
+        description,
 
       contact:
-        String(
-          body.contact || ""
-        ).trim(),
+        contact,
 
       image_url:
         coverImage
@@ -309,7 +633,10 @@ export async function POST(request) {
     };
 
 
-    /* สร้างประกาศ */
+    /* -----------------------
+       INSERT AS USER
+       RLS WILL CHECK AGAIN
+    ----------------------- */
 
     const listingResponse =
       await fetch(
@@ -321,6 +648,9 @@ export async function POST(request) {
 
             apikey:
               key,
+
+            Authorization:
+              `Bearer ${token}`,
 
             "Content-Type":
               "application/json",
@@ -337,7 +667,6 @@ export async function POST(request) {
 
           cache:
             "no-store"
-
         }
       );
 
@@ -346,19 +675,23 @@ export async function POST(request) {
       await listingResponse.text();
 
 
-    if (!listingResponse.ok) {
+    if (
+      !listingResponse.ok
+    ) {
 
-      return new Response(
-        listingText,
+      console.error(
+        "Create listing error:",
+        listingResponse.status,
+        listingText
+      );
+
+
+      return json(
         {
-          status:
-            listingResponse.status,
-
-          headers: {
-            "Content-Type":
-              "application/json; charset=utf-8"
-          }
-        }
+          error:
+            "สร้างประกาศไม่สำเร็จ"
+        },
+        listingResponse.status
       );
 
     }
@@ -379,14 +712,20 @@ export async function POST(request) {
       !listing.id
     ) {
 
-      throw new Error(
-        "สร้างประกาศสำเร็จ แต่ไม่พบ Listing ID"
+      return json(
+        {
+          error:
+            "ไม่พบ Listing ID"
+        },
+        500
       );
 
     }
 
 
-    /* บันทึกรูปทั้งหมด */
+    /* -----------------------
+       INSERT GALLERY
+    ----------------------- */
 
     if (
       imageUrls.length > 0
@@ -394,7 +733,10 @@ export async function POST(request) {
 
       const imageRows =
         imageUrls.map(
-          function(imageUrl, index) {
+          function(
+            imageUrl,
+            index
+          ) {
 
             return {
 
@@ -424,6 +766,9 @@ export async function POST(request) {
               apikey:
                 key,
 
+              Authorization:
+                `Bearer ${token}`,
+
               "Content-Type":
                 "application/json",
 
@@ -439,31 +784,52 @@ export async function POST(request) {
 
             cache:
               "no-store"
-
           }
         );
 
 
-      const imageErrorText =
-        await imageResponse.text();
+      if (
+        !imageResponse.ok
+      ) {
+
+        const imageError =
+          await imageResponse.text();
 
 
-      if (!imageResponse.ok) {
+        console.error(
+          "Gallery insert error:",
+          imageError
+        );
 
-        return Response.json(
+
+        /*
+          ถ้า Gallery พัง
+          ลบ Listing ที่เพิ่งสร้าง
+          ไม่ทิ้งข้อมูลครึ่ง ๆ กลาง ๆ
+        */
+
+        await fetch(
+          `${url}/rest/v1/listings?id=eq.${encodeURIComponent(listing.id)}`,
+          {
+            method: "DELETE",
+
+            headers: {
+              apikey:
+                key,
+
+              Authorization:
+                `Bearer ${token}`
+            }
+          }
+        );
+
+
+        return json(
           {
             error:
-              "สร้างประกาศแล้ว แต่บันทึกรูป Gallery ไม่สำเร็จ",
-
-            details:
-              imageErrorText,
-
-            listing_id:
-              listing.id
+              "บันทึกรูปประกาศไม่สำเร็จ"
           },
-          {
-            status: 500
-          }
+          500
         );
 
       }
@@ -471,28 +837,33 @@ export async function POST(request) {
     }
 
 
-    return Response.json(
+    return json(
       {
-        success: true,
-        listing: listing
+        success:
+          true,
+
+        listing_id:
+          listing.id
       },
-      {
-        status: 201
-      }
+      201
     );
 
   }
 
   catch(error) {
 
-    return Response.json(
+    console.error(
+      "POST error:",
+      error
+    );
+
+
+    return json(
       {
         error:
-          error.message
+          "เกิดข้อผิดพลาด กรุณาลองใหม่"
       },
-      {
-        status: 500
-      }
+      500
     );
 
   }
