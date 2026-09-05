@@ -1,13 +1,16 @@
 function getSupabaseConfig() {
+
   const rawUrl =
     process.env.NEXT_PUBLIC_SUPABASE_URL || "";
 
   const key =
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "";
 
+
   const url = rawUrl
     .replace(/\/rest\/v1\/?$/i, "")
     .replace(/\/+$/, "");
+
 
   return {
     url,
@@ -16,41 +19,56 @@ function getSupabaseConfig() {
 }
 
 
+
+/* =========================
+   GET LISTINGS
+========================= */
+
 export async function GET() {
-  const { url, key } = getSupabaseConfig();
+
+  const { url, key } =
+    getSupabaseConfig();
+
 
   if (!url || !key) {
+
     return Response.json(
       {
-        error: "Supabase environment variables are missing"
+        error:
+          "Supabase environment variables are missing"
       },
       {
         status: 500
       }
     );
+
   }
 
 
   try {
-    const response = await fetch(
-      `${url}/rest/v1/listings?select=*`,
-      {
-        method: "GET",
 
-        headers: {
-          apikey: key,
-          Accept: "application/json"
-        },
+    const response =
+      await fetch(
+        `${url}/rest/v1/listings?select=*`,
+        {
+          method: "GET",
 
-        cache: "no-store"
-      }
-    );
+          headers: {
+            apikey: key,
+            Accept: "application/json"
+          },
+
+          cache: "no-store"
+        }
+      );
 
 
-    const text = await response.text();
+    const text =
+      await response.text();
 
 
     if (!response.ok) {
+
       return new Response(
         text,
         {
@@ -62,6 +80,7 @@ export async function GET() {
           }
         }
       );
+
     }
 
 
@@ -80,7 +99,9 @@ export async function GET() {
       }
     );
 
-  } catch (error) {
+  }
+
+  catch (error) {
 
     return Response.json(
       {
@@ -90,16 +111,25 @@ export async function GET() {
         status: 500
       }
     );
+
   }
+
 }
 
 
 
+/* =========================
+   CREATE LISTING
+========================= */
+
 export async function POST(request) {
-  const { url, key } = getSupabaseConfig();
+
+  const { url, key } =
+    getSupabaseConfig();
 
 
   if (!url || !key) {
+
     return Response.json(
       {
         error:
@@ -109,10 +139,12 @@ export async function POST(request) {
         status: 500
       }
     );
+
   }
 
 
   try {
+
     const body =
       await request.json();
 
@@ -130,30 +162,38 @@ export async function POST(request) {
 
 
     const price =
-      Number(body.price);
+      Number(
+        body.price
+      );
 
 
     if (!condoName) {
+
       return Response.json(
         {
-          error: "กรุณากรอกชื่อคอนโด"
+          error:
+            "กรุณากรอกชื่อคอนโด"
         },
         {
           status: 400
         }
       );
+
     }
 
 
     if (!location) {
+
       return Response.json(
         {
-          error: "กรุณากรอกทำเล"
+          error:
+            "กรุณากรอกทำเล"
         },
         {
           status: 400
         }
       );
+
     }
 
 
@@ -161,14 +201,17 @@ export async function POST(request) {
       !Number.isFinite(price) ||
       price <= 0
     ) {
+
       return Response.json(
         {
-          error: "กรุณากรอกราคาให้ถูกต้อง"
+          error:
+            "กรุณากรอกราคาให้ถูกต้อง"
         },
         {
           status: 400
         }
       );
+
     }
 
 
@@ -184,22 +227,26 @@ export async function POST(request) {
         price,
 
       bedrooms:
-        body.bedrooms === null
+        body.bedrooms === null ||
+        body.bedrooms === undefined
           ? null
           : Number(body.bedrooms),
 
       bathrooms:
-        body.bathrooms === null
+        body.bathrooms === null ||
+        body.bathrooms === undefined
           ? null
           : Number(body.bathrooms),
 
       size_sqm:
-        body.size_sqm === null
+        body.size_sqm === null ||
+        body.size_sqm === undefined
           ? null
           : Number(body.size_sqm),
 
       floor:
-        body.floor === null
+        body.floor === null ||
+        body.floor === undefined
           ? null
           : Number(body.floor),
 
@@ -217,32 +264,45 @@ export async function POST(request) {
       contact:
         String(
           body.contact || ""
+        ).trim(),
+
+      image_url:
+        String(
+          body.image_url || ""
         ).trim()
+
     };
 
 
-    const response = await fetch(
-      `${url}/rest/v1/listings`,
-      {
-        method: "POST",
+    const response =
+      await fetch(
+        `${url}/rest/v1/listings`,
+        {
+          method: "POST",
 
-        headers: {
-          apikey: key,
+          headers: {
 
-          "Content-Type":
-            "application/json",
+            apikey:
+              key,
 
-          Prefer:
-            "return=representation"
-        },
+            "Content-Type":
+              "application/json",
 
-        body:
-          JSON.stringify(payload),
+            Prefer:
+              "return=representation"
 
-        cache:
-          "no-store"
-      }
-    );
+          },
+
+          body:
+            JSON.stringify(
+              payload
+            ),
+
+          cache:
+            "no-store"
+
+        }
+      );
 
 
     const text =
@@ -279,7 +339,9 @@ export async function POST(request) {
       }
     );
 
-  } catch (error) {
+  }
+
+  catch (error) {
 
     return Response.json(
       {
@@ -290,5 +352,7 @@ export async function POST(request) {
         status: 500
       }
     );
+
   }
+
 }
