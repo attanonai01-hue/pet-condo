@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <title>ลงประกาศ | Pet Condo</title>
+
+
+  <style>
+
+    * {
+      box-sizing: border-box;
+    }
+
+
+    body {
+      margin: 0;
+
+      font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+
+      background: #f6f6f6;
+
+      color: #222;
+    }
+
+
+    header {
+      background: white;
+
+      padding: 17px 20px;
+
+      border-bottom:
+        1px solid #eee;
+
+      display: flex;
+
+      justify-content:
+        space-between;
+
+      align-items: center;
+    }
+
+
+    .logo {
+      font-size: 22px;
+
+      font-weight: 700;
+
+      text-decoration: none;
+
+      color: #222;
+    }
+
+
+    .back {
+      color: #222;
+
+      text-decoration: none;
+
+      font-weight: 600;
+    }
+
+
+    .container {
+      width: 100%;
+
+      max-width: 700px;
+
+      margin: auto;
+
+      padding:
+        35px 18px
+        60px;
+    }
+
+
+    h1 {
+      margin-top: 0;
+
+      margin-bottom: 8px;
+
+      font-size: 32px;
+    }
+
+
+    .subtitle {
+      color: #777;
+
+      margin-bottom: 28px;
+
+      line-height: 1.6;
+    }
+
+
+    .form-card {
+      background: white;
+
+      padding: 24px;
+
+      border-radius: 20px;
+
+      box-shadow:
+        0 2px 15px
+        rgba(0,0,0,.06);
+    }
+
+
+    .field {
+      margin-bottom: 20px;
+    }
+
+
+    label {
+      display: block;
+
+      margin-bottom: 8px;
+
+      font-weight: 600;
+    }
+
+
+    input,
+    textarea {
+      width: 100%;
+
+      border:
+        1px solid #ddd;
+
+      border-radius: 13px;
+
+      padding: 14px;
+
+      font-size: 16px;
+
+      font-family: inherit;
+
+      outline: none;
+
+      background: white;
+    }
+
+
+    input:focus,
+    textarea:focus {
+      border-color: #777;
+    }
+
+
+    textarea {
+      min-height: 130px;
+
+      resize: vertical;
+    }
+
+
+    .row {
+      display: grid;
+
+      grid-template-columns:
+        1fr 1fr;
+
+      gap: 14px;
+    }
+
+
+    .pet-box {
+      background: #f7f7f7;
+
+      padding: 16px;
+
+      border-radius: 14px;
+
+      margin-bottom: 20px;
+    }
+
+
+    .pet-option {
+      display: flex;
+
+      align-items: center;
+
+      margin:
+        10px 0;
+
+      font-size: 16px;
+    }
+
+
+    .pet-option input {
+      width: 21px;
+
+      height: 21px;
+
+      margin-right: 10px;
+    }
+
+
+    button {
+      width: 100%;
+
+      border: 0;
+
+      background: #111;
+
+      color: white;
+
+      padding: 16px;
+
+      border-radius: 14px;
+
+      font-size: 17px;
+
+      font-weight: 700;
+
+      cursor: pointer;
+    }
+
+
+    button:disabled {
+      opacity: .5;
+
+      cursor:
+        not-allowed;
+    }
+
+
+    #message {
+      display: none;
+
+      margin-bottom: 20px;
+
+      padding: 15px;
+
+      border-radius: 13px;
+
+      line-height: 1.5;
+
+      word-break:
+        break-word;
+    }
+
+
+    .success {
+      display: block !important;
+
+      background: #ecfdf3;
+
+      color: #067647;
+    }
+
+
+    .error {
+      display: block !important;
+
+      background: #fff0ee;
+
+      color: #b42318;
+    }
+
+
+    .required {
+      color: #d92d20;
+    }
+
+
+    @media
+    (max-width: 600px) {
+
+      .container {
+        padding-top: 25px;
+      }
+
+
+      .form-card {
+        padding: 20px;
+      }
+
+
+      .row {
+        grid-template-columns:
+          1fr 1fr;
+      }
+
+
+      h1 {
+        font-size: 28px;
+      }
+    }
+
+  </style>
+</head>
+
+
+<body>
+
+
+<header>
+
+  <a
+    href="/"
+    class="logo"
+  >
+    🐾 Pet Condo
+  </a>
+
+
+  <a
+    href="/"
+    class="back"
+  >
+    ← กลับ
+  </a>
+
+</header>
+
+
+
+<main class="container">
+
+
+  <h1>
+    ลงประกาศคอนโด
+  </h1>
+
+
+  <div class="subtitle">
+    เพิ่มคอนโดที่สามารถเลี้ยงสัตว์ได้
+    ข้อมูลจะขึ้นบนหน้าเว็บหลังลงประกาศสำเร็จ
+  </div>
+
+
+  <div
+    id="message"
+  ></div>
+
+
+  <div class="form-card">
+
+
+    <form id="listingForm">
+
+
+      <div class="field">
+
+        <label>
+          ชื่อคอนโด
+          <span class="required">
+            *
+          </span>
+        </label>
+
+        <input
+          id="condoName"
+          type="text"
+          required
+          placeholder="เช่น Happy Pet Residence"
+        >
+
+      </div>
+
+
+
+      <div class="field">
+
+        <label>
+          ทำเล
+          <span class="required">
+            *
+          </span>
+        </label>
+
+        <input
+          id="location"
+          type="text"
+          required
+          placeholder="เช่น อ่อนนุช • ใกล้ BTS"
+        >
+
+      </div>
+
+
+
+      <div class="field">
+
+        <label>
+          ค่าเช่า / เดือน
+          <span class="required">
+            *
+          </span>
+        </label>
+
+        <input
+          id="price"
+          type="number"
+          min="1"
+          required
+          placeholder="15000"
+        >
+
+      </div>
+
+
+
+      <div class="row">
+
+
+        <div class="field">
+
+          <label>
+            ห้องนอน
+          </label>
+
+          <input
+            id="bedrooms"
+            type="number"
+            min="0"
+            placeholder="1"
+          >
+
+        </div>
+
+
+
+        <div class="field">
+
+          <label>
+            ห้องน้ำ
+          </label>
+
+          <input
+            id="bathrooms"
+            type="number"
+            min="0"
+            placeholder="1"
+          >
+
+        </div>
+
+      </div>
+
+
+
+      <div class="row">
+
+
+        <div class="field">
+
+          <label>
+            ขนาดห้อง
+          </label>
+
+          <input
+            id="size"
+            type="number"
+            min="0"
+            step="0.01"
+            placeholder="35"
+          >
+
+        </div>
+
+
+
+        <div class="field">
+
+          <label>
+            ชั้น
+          </label>
+
+          <input
+            id="floor"
+            type="number"
+            placeholder="12"
+          >
+
+        </div>
+
+      </div>
+
+
+
+      <div class="pet-box">
+
+        <strong>
+          สัตว์เลี้ยงที่อนุญาต
+        </strong>
+
+
+        <label class="pet-option">
+
+          <input
+            id="petDog"
+            type="checkbox"
+          >
+
+          🐶 เลี้ยงสุนัขได้
+
+        </label>
+
+
+        <label class="pet-option">
+
+          <input
+            id="petCat"
+            type="checkbox"
+          >
+
+          🐱 เลี้ยงแมวได้
+
+        </label>
+
+      </div>
+
+
+
+      <div class="field">
+
+        <label>
+          รายละเอียด
+        </label>
+
+        <textarea
+          id="description"
+          placeholder="รายละเอียดคอนโด การเดินทาง เงื่อนไขการเลี้ยงสัตว์ ฯลฯ"
+        ></textarea>
+
+      </div>
+
+
+
+      <div class="field">
+
+        <label>
+          ช่องทางติดต่อ
+        </label>
+
+        <input
+          id="contact"
+          type="text"
+          placeholder="เช่น LINE: petcondo-demo"
+        >
+
+      </div>
+
+
+
+      <button
+        id="submitButton"
+        type="submit"
+      >
+        ลงประกาศ
+      </button>
+
+
+    </form>
+
+  </div>
+
+</main>
+
+
+
+<script>
+
+
+function getNumberOrNull(id) {
+
+  const value =
+    document
+      .getElementById(id)
+      .value
+      .trim();
+
+
+  if (value === "") {
+    return null;
+  }
+
+
+  return Number(value);
+}
+
+
+
+function showMessage(
+  text,
+  type
+) {
+
+  const box =
+    document
+      .getElementById(
+        "message"
+      );
+
+
+  box.className =
+    type;
+
+
+  box.textContent =
+    text;
+
+
+  box.scrollIntoView({
+    behavior: "smooth",
+    block: "center"
+  });
+}
+
+
+
+document
+  .getElementById(
+    "listingForm"
+  )
+  .addEventListener(
+    "submit",
+    async function(event) {
+
+      event.preventDefault();
+
+
+      const submitButton =
+        document
+          .getElementById(
+            "submitButton"
+          );
+
+
+      submitButton.disabled =
+        true;
+
+
+      submitButton.textContent =
+        "กำลังลงประกาศ...";
+
+
+      const payload = {
+
+        condo_name:
+          document
+            .getElementById(
+              "condoName"
+            )
+            .value
+            .trim(),
+
+        location:
+          document
+            .getElementById(
+              "location"
+            )
+            .value
+            .trim(),
+
+        price:
+          Number(
+            document
+              .getElementById(
+                "price"
+              )
+              .value
+          ),
+
+        bedrooms:
+          getNumberOrNull(
+            "bedrooms"
+          ),
+
+        bathrooms:
+          getNumberOrNull(
+            "bathrooms"
+          ),
+
+        size_sqm:
+          getNumberOrNull(
+            "size"
+          ),
+
+        floor:
+          getNumberOrNull(
+            "floor"
+          ),
+
+        pet_dog:
+          document
+            .getElementById(
+              "petDog"
+            )
+            .checked,
+
+        pet_cat:
+          document
+            .getElementById(
+              "petCat"
+            )
+            .checked,
+
+        description:
+          document
+            .getElementById(
+              "description"
+            )
+            .value
+            .trim(),
+
+        contact:
+          document
+            .getElementById(
+              "contact"
+            )
+            .value
+            .trim()
+
+      };
+
+
+      try {
+
+        const response =
+          await fetch(
+            "/api/listings",
+            {
+
+              method: "POST",
+
+              headers: {
+                "Content-Type":
+                  "application/json"
+              },
+
+              body:
+                JSON.stringify(
+                  payload
+                )
+
+            }
+          );
+
+
+        const text =
+          await response.text();
+
+
+        if (!response.ok) {
+
+          let errorMessage =
+            text;
+
+
+          try {
+
+            const errorData =
+              JSON.parse(text);
+
+
+            errorMessage =
+              errorData.error ||
+              errorData.message ||
+              text;
+
+          } catch {}
+
+
+          throw new Error(
+            errorMessage
+          );
+
+        }
+
+
+        showMessage(
+          "✅ ลงประกาศสำเร็จ กำลังกลับหน้าหลัก...",
+          "success"
+        );
+
+
+        setTimeout(
+          function() {
+
+            window.location.href =
+              "/?posted=1";
+
+          },
+          1200
+        );
+
+      }
+
+      catch (error) {
+
+        console.error(
+          error
+        );
+
+
+        showMessage(
+          "❌ ลงประกาศไม่สำเร็จ: " +
+          error.message,
+          "error"
+        );
+
+
+        submitButton.disabled =
+          false;
+
+
+        submitButton.textContent =
+          "ลงประกาศ";
+
+      }
+
+    }
+  );
+
+</script>
+
+
+</body>
+</html>
