@@ -3,337 +3,459 @@
 
 <head>
 
-  <meta charset="UTF-8">
+<meta charset="UTF-8">
 
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1.0"
+>
 
-  <title>รายละเอียดคอนโด | Pet Condo</title>
+<title>Pet Condo</title>
 
 
-  <style>
+<style>
 
-    * {
-      box-sizing: border-box;
-    }
+* {
+  box-sizing: border-box;
+}
 
 
-    body {
-      margin: 0;
+body {
 
-      font-family:
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        sans-serif;
+  margin: 0;
 
-      background: #f6f6f6;
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
 
-      color: #222;
-    }
+  background: #f6f6f6;
 
+  color: #222;
 
-    .hero-image {
+}
 
-      width: 100%;
 
-      height: 360px;
+/* GALLERY */
 
-      background:
-        linear-gradient(
-          135deg,
-          #eeeeee,
-          #cccccc
-        );
+.gallery {
 
-      display: flex;
+  position: relative;
 
-      align-items: center;
+  width: 100%;
 
-      justify-content: center;
+  background: #ddd;
 
-      font-size: 90px;
+}
 
-      overflow: hidden;
 
-    }
+.gallery-track {
 
+  display: flex;
 
-    .hero-image img {
+  width: 100%;
 
-      width: 100%;
+  overflow-x: auto;
 
-      height: 100%;
+  scroll-snap-type:
+    x mandatory;
 
-      object-fit: cover;
+  scroll-behavior:
+    smooth;
 
-      display: block;
+  -webkit-overflow-scrolling:
+    touch;
 
-    }
+  scrollbar-width:
+    none;
 
+}
 
-    .container {
 
-      width: 100%;
+.gallery-track::-webkit-scrollbar {
 
-      max-width: 760px;
+  display: none;
 
-      margin: auto;
+}
 
-      padding:
-        30px 20px
-        50px;
 
-    }
+.slide {
 
+  min-width: 100%;
 
-    .back {
+  width: 100%;
 
-      display: inline-block;
+  height: 390px;
 
-      margin-bottom: 22px;
+  scroll-snap-align:
+    start;
 
-      color: #222;
+  background: #ddd;
 
-      text-decoration: none;
+  display: flex;
 
-      font-weight: 600;
+  justify-content: center;
 
-    }
+  align-items: center;
 
+  font-size: 80px;
 
-    h1 {
+}
 
-      margin:
-        0 0 12px;
 
-      font-size: 36px;
+.slide img {
 
-      line-height: 1.2;
+  width: 100%;
 
-    }
+  height: 100%;
 
+  object-fit: cover;
 
-    .location {
+}
 
-      color: #777;
 
-      font-size: 18px;
+.gallery-button {
 
-      margin-bottom: 28px;
+  position: absolute;
 
-    }
+  top: 50%;
 
+  transform:
+    translateY(-50%);
 
-    .price {
+  width: 42px;
 
-      font-size: 31px;
+  height: 42px;
 
-      font-weight: 700;
+  border: 0;
 
-      margin-bottom: 20px;
+  border-radius: 50%;
 
-    }
+  background:
+    rgba(255,255,255,.9);
 
+  font-size: 24px;
 
-    .tags {
+  z-index: 5;
 
-      margin-bottom: 25px;
+}
 
-    }
 
+.prev {
 
-    .tag {
+  left: 12px;
 
-      display: inline-block;
+}
 
-      background: white;
 
-      padding:
-        10px 14px;
+.next {
 
-      margin-right: 6px;
+  right: 12px;
 
-      margin-bottom: 6px;
+}
 
-      border-radius: 12px;
 
-      font-size: 16px;
+.counter {
 
-    }
+  position: absolute;
 
+  right: 15px;
 
-    .box {
+  bottom: 15px;
 
-      background: white;
+  background:
+    rgba(0,0,0,.65);
 
-      border-radius: 20px;
+  color: white;
 
-      padding: 25px;
+  border-radius: 20px;
 
-      margin-top: 20px;
+  padding:
+    7px 11px;
 
-    }
+  font-size: 13px;
 
+}
 
-    .box h2 {
 
-      margin-top: 0;
+.thumbnails {
 
-      margin-bottom: 20px;
+  display: flex;
 
-      font-size: 23px;
+  gap: 8px;
 
-    }
+  padding: 10px;
 
+  overflow-x: auto;
 
-    .description {
+  background: white;
 
-      font-size: 17px;
+}
 
-      line-height: 1.7;
 
-      white-space: pre-line;
+.thumb {
 
-    }
+  width: 68px;
 
+  height: 60px;
 
-    .room-row {
+  flex: 0 0 auto;
 
-      font-size: 18px;
+  border-radius: 8px;
 
-      margin:
-        18px 0;
+  overflow: hidden;
 
-    }
+  border:
+    2px solid transparent;
 
+  padding: 0;
 
-    .contact-text {
+  background: #ddd;
 
-      font-size: 17px;
+}
 
-      line-height: 1.6;
 
-      word-break: break-word;
+.thumb.active {
 
-    }
+  border-color: #111;
 
+}
 
-    .contact-btn {
 
-      display: block;
+.thumb img {
 
-      background: #111;
+  width: 100%;
 
-      color: white;
+  height: 100%;
 
-      text-decoration: none;
+  object-fit: cover;
 
-      text-align: center;
+}
 
-      padding: 16px;
 
-      border-radius: 14px;
+/* CONTENT */
 
-      margin-top: 25px;
+.container {
 
-      font-size: 18px;
+  max-width: 760px;
 
-      font-weight: 600;
+  margin: auto;
 
-    }
+  padding:
+    30px 20px
+    50px;
 
+}
 
-    #loading {
 
-      text-align: center;
+.back {
 
-      padding:
-        100px 20px;
+  display: inline-block;
 
-      color: #777;
+  margin-bottom: 22px;
 
-    }
+  color: #222;
 
+  text-decoration: none;
 
-    #error {
+  font-weight: 600;
 
-      display: none;
+}
 
-      max-width: 700px;
 
-      margin:
-        40px auto;
+h1 {
 
-      background: #ffebee;
+  margin:
+    0 0 12px;
 
-      color: #b42318;
+  font-size: 36px;
 
-      padding: 20px;
+}
 
-      border-radius: 14px;
 
-      text-align: center;
+.location {
 
-    }
+  color: #777;
 
+  font-size: 18px;
 
-    #page {
+  margin-bottom: 28px;
 
-      display: none;
+}
 
-    }
 
+.price {
 
-    @media (max-width: 600px) {
+  font-size: 31px;
 
-      .hero-image {
+  font-weight: 700;
 
-        height: 300px;
+  margin-bottom: 20px;
 
-      }
+}
 
 
-      h1 {
+.tags {
 
-        font-size: 30px;
+  margin-bottom: 25px;
 
-      }
+}
 
 
-      .container {
+.tag {
 
-        padding:
-          28px 20px
-          45px;
+  display: inline-block;
 
-      }
+  background: white;
 
+  padding:
+    10px 14px;
 
-      .box {
+  margin-right: 6px;
 
-        padding: 22px;
+  margin-bottom: 6px;
 
-      }
+  border-radius: 12px;
 
-    }
+  font-size: 16px;
 
-  </style>
+}
+
+
+.box {
+
+  background: white;
+
+  border-radius: 20px;
+
+  padding: 25px;
+
+  margin-top: 20px;
+
+}
+
+
+.box h2 {
+
+  margin-top: 0;
+
+}
+
+
+.description {
+
+  font-size: 17px;
+
+  line-height: 1.7;
+
+  white-space:
+    pre-line;
+
+}
+
+
+.room-row {
+
+  font-size: 18px;
+
+  margin:
+    18px 0;
+
+}
+
+
+.contact {
+
+  display: block;
+
+  background: #111;
+
+  color: white;
+
+  text-decoration: none;
+
+  text-align: center;
+
+  padding: 16px;
+
+  border-radius: 14px;
+
+  margin-top: 25px;
+
+  font-size: 18px;
+
+  font-weight: 600;
+
+}
+
+
+#loading {
+
+  text-align: center;
+
+  padding: 100px;
+
+}
+
+
+#page {
+
+  display: none;
+
+}
+
+
+#error {
+
+  display: none;
+
+  padding: 40px 20px;
+
+  text-align: center;
+
+  color: #b42318;
+
+}
+
+
+@media (max-width:600px) {
+
+  .slide {
+
+    height: 300px;
+
+  }
+
+
+  .gallery-button {
+
+    width: 38px;
+
+    height: 38px;
+
+  }
+
+
+  h1 {
+
+    font-size: 30px;
+
+  }
+
+}
+
+</style>
 
 </head>
-
 
 
 <body>
 
 
-
 <div id="loading">
-  กำลังโหลดข้อมูลคอนโด...
+  กำลังโหลดข้อมูล...
 </div>
-
 
 
 <div id="error"></div>
@@ -343,134 +465,148 @@
 <div id="page">
 
 
-  <div
-    id="heroImage"
-    class="hero-image"
-  >
-    🏢
-  </div>
+<div
+  id="gallery"
+  class="gallery"
+>
+
+
+<div
+  id="galleryTrack"
+  class="gallery-track"
+></div>
+
+
+<button
+  id="prevButton"
+  class="gallery-button prev"
+>
+  ‹
+</button>
+
+
+<button
+  id="nextButton"
+  class="gallery-button next"
+>
+  ›
+</button>
+
+
+<div
+  id="counter"
+  class="counter"
+></div>
+
+
+</div>
+
+
+<div
+  id="thumbnails"
+  class="thumbnails"
+></div>
 
 
 
-  <main class="container">
+<main class="container">
 
 
-    <a
-      href="/"
-      class="back"
-    >
-      ← กลับหน้าหลัก
-    </a>
+<a
+  href="/"
+  class="back"
+>
+  ← กลับหน้าหลัก
+</a>
 
 
-
-    <h1 id="condoName"></h1>
-
+<h1 id="condoName"></h1>
 
 
-    <div
-      id="location"
-      class="location"
-    ></div>
+<div
+  id="location"
+  class="location"
+></div>
 
 
-
-    <div
-      id="price"
-      class="price"
-    ></div>
-
+<div
+  id="price"
+  class="price"
+></div>
 
 
-    <div
-      id="petTags"
-      class="tags"
-    ></div>
+<div
+  id="petTags"
+  class="tags"
+></div>
 
 
 
-    <section class="box">
+<section class="box">
 
+<h2>
+  รายละเอียด
+</h2>
 
-      <h2>
-        รายละเอียด
-      </h2>
+<div
+  id="description"
+  class="description"
+></div>
 
-
-      <div
-        id="description"
-        class="description"
-      ></div>
-
-
-    </section>
+</section>
 
 
 
-    <section class="box">
+<section class="box">
 
+<h2>
+  ข้อมูลห้อง
+</h2>
 
-      <h2>
-        ข้อมูลห้อง
-      </h2>
+<div
+  id="bedrooms"
+  class="room-row"
+></div>
 
+<div
+  id="bathrooms"
+  class="room-row"
+></div>
 
-      <div
-        id="bedrooms"
-        class="room-row"
-      ></div>
+<div
+  id="size"
+  class="room-row"
+></div>
 
+<div
+  id="floor"
+  class="room-row"
+></div>
 
-      <div
-        id="bathrooms"
-        class="room-row"
-      ></div>
-
-
-      <div
-        id="size"
-        class="room-row"
-      ></div>
-
-
-      <div
-        id="floor"
-        class="room-row"
-      ></div>
-
-
-    </section>
+</section>
 
 
 
-    <section class="box">
+<section class="box">
+
+<h2>
+  ติดต่อ
+</h2>
+
+<div id="contactText"></div>
+
+<a
+  href="#"
+  id="contactButton"
+  class="contact"
+>
+  ติดต่อผู้ลงประกาศ
+</a>
+
+</section>
 
 
-      <h2>
-        ติดต่อ
-      </h2>
-
-
-      <div
-        id="contactText"
-        class="contact-text"
-      ></div>
-
-
-      <a
-        href="#"
-        id="contactButton"
-        class="contact-btn"
-      >
-        ติดต่อผู้ลงประกาศ
-      </a>
-
-
-    </section>
-
-
-  </main>
-
+</main>
 
 </div>
 
@@ -479,40 +615,16 @@
 <script>
 
 
-function escapeHTML(value) {
+let galleryImages =
+  [];
 
-  return String(value ?? "")
 
-    .replaceAll(
-      "&",
-      "&amp;"
-    )
-
-    .replaceAll(
-      "<",
-      "&lt;"
-    )
-
-    .replaceAll(
-      ">",
-      "&gt;"
-    )
-
-    .replaceAll(
-      '"',
-      "&quot;"
-    )
-
-    .replaceAll(
-      "'",
-      "&#039;"
-    );
-
-}
+let currentImage =
+  0;
 
 
 
-function safeImageUrl(value) {
+function safeUrl(value) {
 
   if (!value) {
     return null;
@@ -522,14 +634,12 @@ function safeImageUrl(value) {
   try {
 
     const url =
-      new URL(
-        value
-      );
+      new URL(value);
 
 
     if (
-      url.protocol !== "http:" &&
-      url.protocol !== "https:"
+      url.protocol !== "https:" &&
+      url.protocol !== "http:"
     ) {
 
       return null;
@@ -551,70 +661,445 @@ function safeImageUrl(value) {
 
 
 
-function showImage(
+function getImages(
   condo
 ) {
 
-  const hero =
-    document.getElementById(
-      "heroImage"
-    );
+
+  const rows =
+    Array.isArray(
+      condo.listing_images
+    )
+      ? [...condo.listing_images]
+      : [];
 
 
-  const imageUrl =
-    safeImageUrl(
+  rows.sort(
+    function(a,b) {
+
+      return (
+        Number(a.sort_order || 0) -
+        Number(b.sort_order || 0)
+      );
+
+    }
+  );
+
+
+  const urls =
+    rows
+      .map(
+        item =>
+          safeUrl(
+            item.image_url
+          )
+      )
+      .filter(Boolean);
+
+
+  const oldCover =
+    safeUrl(
       condo.image_url
     );
 
 
-  if (!imageUrl) {
+  if (
+    oldCover &&
+    !urls.includes(
+      oldCover
+    )
+  ) {
 
-    hero.textContent =
+    urls.unshift(
+      oldCover
+    );
+
+  }
+
+
+  return urls;
+
+}
+
+
+
+/* ==================
+   GALLERY
+================== */
+
+function buildGallery(
+  images
+) {
+
+
+  galleryImages =
+    images;
+
+
+  const track =
+    document.getElementById(
+      "galleryTrack"
+    );
+
+
+  const thumbs =
+    document.getElementById(
+      "thumbnails"
+    );
+
+
+  const previous =
+    document.getElementById(
+      "prevButton"
+    );
+
+
+  const next =
+    document.getElementById(
+      "nextButton"
+    );
+
+
+  track.innerHTML =
+    "";
+
+
+  thumbs.innerHTML =
+    "";
+
+
+  if (
+    images.length === 0
+  ) {
+
+
+    const slide =
+      document.createElement(
+        "div"
+      );
+
+
+    slide.className =
+      "slide";
+
+
+    slide.textContent =
       "🏢";
+
+
+    track.appendChild(
+      slide
+    );
+
+
+    previous.style.display =
+      "none";
+
+
+    next.style.display =
+      "none";
+
+
+    thumbs.style.display =
+      "none";
+
+
+    document
+      .getElementById(
+        "counter"
+      )
+      .style.display =
+      "none";
+
 
     return;
 
   }
 
 
-  hero.innerHTML =
-    "";
+  images.forEach(
+    function(url,index) {
 
 
-  const img =
-    document.createElement(
-      "img"
+      const slide =
+        document.createElement(
+          "div"
+        );
+
+
+      slide.className =
+        "slide";
+
+
+      const image =
+        document.createElement(
+          "img"
+        );
+
+
+      image.src =
+        url;
+
+
+      image.alt =
+        `รูปคอนโด ${index + 1}`;
+
+
+      slide.appendChild(
+        image
+      );
+
+
+      track.appendChild(
+        slide
+      );
+
+
+      const thumb =
+        document.createElement(
+          "button"
+        );
+
+
+      thumb.className =
+        "thumb";
+
+
+      const thumbImage =
+        document.createElement(
+          "img"
+        );
+
+
+      thumbImage.src =
+        url;
+
+
+      thumb.appendChild(
+        thumbImage
+      );
+
+
+      thumb.onclick =
+        function() {
+
+          goToImage(
+            index
+          );
+
+        };
+
+
+      thumbs.appendChild(
+        thumb
+      );
+
+
+    }
+  );
+
+
+  if (
+    images.length === 1
+  ) {
+
+    previous.style.display =
+      "none";
+
+
+    next.style.display =
+      "none";
+
+
+    thumbs.style.display =
+      "none";
+
+  }
+
+
+  updateGalleryUI();
+
+}
+
+
+
+function goToImage(
+  index
+) {
+
+
+  if (
+    galleryImages.length === 0
+  ) {
+    return;
+  }
+
+
+  currentImage =
+    Math.max(
+      0,
+      Math.min(
+        index,
+        galleryImages.length - 1
+      )
     );
 
 
-  img.src =
-    imageUrl;
+  const track =
+    document.getElementById(
+      "galleryTrack"
+    );
 
 
-  img.alt =
-    condo.condo_name ||
-    "รูปคอนโด";
+  track.scrollTo({
+
+    left:
+      track.clientWidth *
+      currentImage,
+
+    behavior:
+      "smooth"
+
+  });
 
 
-  img.onerror =
-    function() {
+  updateGalleryUI();
 
-      hero.innerHTML =
-        "";
-
-      hero.textContent =
-        "🏢";
-
-    };
+}
 
 
-  hero.appendChild(
-    img
+
+function updateGalleryUI() {
+
+
+  const counter =
+    document.getElementById(
+      "counter"
+    );
+
+
+  if (
+    galleryImages.length
+  ) {
+
+    counter.textContent =
+      `${currentImage + 1} / ${galleryImages.length}`;
+
+  }
+
+
+  const thumbs =
+    document.querySelectorAll(
+      ".thumb"
+    );
+
+
+  thumbs.forEach(
+    function(thumb,index) {
+
+      thumb.classList.toggle(
+        "active",
+        index === currentImage
+      );
+
+    }
   );
 
 }
 
 
+
+document
+  .getElementById(
+    "prevButton"
+  )
+  .addEventListener(
+    "click",
+    function() {
+
+      goToImage(
+        currentImage - 1
+      );
+
+    }
+  );
+
+
+
+document
+  .getElementById(
+    "nextButton"
+  )
+  .addEventListener(
+    "click",
+    function() {
+
+      goToImage(
+        currentImage + 1
+      );
+
+    }
+  );
+
+
+
+let scrollTimer;
+
+
+document
+  .getElementById(
+    "galleryTrack"
+  )
+  .addEventListener(
+    "scroll",
+    function() {
+
+
+      clearTimeout(
+        scrollTimer
+      );
+
+
+      const track =
+        this;
+
+
+      scrollTimer =
+        setTimeout(
+          function() {
+
+
+            if (
+              track.clientWidth === 0
+            ) {
+
+              return;
+
+            }
+
+
+            currentImage =
+              Math.round(
+                track.scrollLeft /
+                track.clientWidth
+              );
+
+
+            updateGalleryUI();
+
+
+          },
+          80
+        );
+
+    }
+  );
+
+
+
+/* ==================
+   LOAD CONDO
+================== */
 
 async function loadCondo() {
 
@@ -625,125 +1110,86 @@ async function loadCondo() {
     );
 
 
-  const errorBox =
-    document.getElementById(
-      "error"
-    );
-
-
   const page =
     document.getElementById(
       "page"
     );
 
 
+  const errorBox =
+    document.getElementById(
+      "error"
+    );
+
+
   try {
 
 
-    const params =
+    const id =
       new URLSearchParams(
         window.location.search
-      );
+      )
+      .get("id");
 
 
-    const condoId =
-      params.get(
-        "id"
-      );
-
-
-    if (!condoId) {
+    if (!id) {
 
       throw new Error(
-        "ไม่พบ ID ของคอนโด"
+        "ไม่พบ ID ของประกาศ"
       );
 
     }
-
 
 
     const response =
       await fetch(
         "/api/listings",
         {
-          method: "GET",
-          cache: "no-store",
-
-          headers: {
-            Accept:
-              "application/json"
-          }
+          cache:
+            "no-store"
         }
       );
 
 
-
     if (!response.ok) {
 
-      const text =
-        await response.text();
-
-
       throw new Error(
-        `โหลดข้อมูลไม่สำเร็จ HTTP ${response.status}: ${text}`
+        "โหลดข้อมูลไม่สำเร็จ"
       );
 
     }
-
 
 
     const listings =
       await response.json();
 
 
-
-    if (
-      !Array.isArray(
-        listings
-      )
-    ) {
-
-      throw new Error(
-        "ข้อมูลจาก API ไม่ถูกต้อง"
-      );
-
-    }
-
-
-
     const condo =
       listings.find(
-        function(item) {
-
-          return (
-            String(item.id) ===
-            String(condoId)
-          );
-
-        }
+        item =>
+          String(item.id) ===
+          String(id)
       );
-
 
 
     if (!condo) {
 
       throw new Error(
-        "ไม่พบประกาศนี้ใน Database"
+        "ไม่พบประกาศนี้"
       );
 
     }
 
 
-
-    document.title =
-      `${condo.condo_name || "รายละเอียดคอนโด"} | Pet Condo`;
-
-
-
-    showImage(
-      condo
+    buildGallery(
+      getImages(
+        condo
+      )
     );
 
+
+    document.title =
+      `${condo.condo_name} | Pet Condo`;
 
 
     document
@@ -755,24 +1201,12 @@ async function loadCondo() {
       "ไม่ระบุชื่อ";
 
 
-
     document
       .getElementById(
         "location"
       )
       .textContent =
-      `📍 ${condo.location || "ไม่ระบุทำเล"}`;
-
-
-
-    const price =
-      Number(
-        condo.price || 0
-      )
-      .toLocaleString(
-        "th-TH"
-      );
-
+      `📍 ${condo.location || "-"}`;
 
 
     document
@@ -780,45 +1214,37 @@ async function loadCondo() {
         "price"
       )
       .textContent =
-      `฿${price} / เดือน`;
-
+      `฿${Number(
+        condo.price || 0
+      ).toLocaleString(
+        "th-TH"
+      )} / เดือน`;
 
 
     let tags =
       "";
 
 
-
-    if (
-      condo.pet_dog === true
-    ) {
+    if (condo.pet_dog) {
 
       tags += `
-
         <span class="tag">
           🐶 เลี้ยงสุนัขได้
         </span>
-
       `;
 
     }
 
 
-
-    if (
-      condo.pet_cat === true
-    ) {
+    if (condo.pet_cat) {
 
       tags += `
-
         <span class="tag">
           🐱 เลี้ยงแมวได้
         </span>
-
       `;
 
     }
-
 
 
     document
@@ -827,7 +1253,6 @@ async function loadCondo() {
       )
       .innerHTML =
       tags;
-
 
 
     document
@@ -839,17 +1264,12 @@ async function loadCondo() {
       "ไม่มีรายละเอียด";
 
 
-
     document
       .getElementById(
         "bedrooms"
       )
       .textContent =
-      `🛏️ ${
-        condo.bedrooms ??
-        "-"
-      } ห้องนอน`;
-
+      `🛏️ ${condo.bedrooms ?? "-"} ห้องนอน`;
 
 
     document
@@ -857,11 +1277,7 @@ async function loadCondo() {
         "bathrooms"
       )
       .textContent =
-      `🚿 ${
-        condo.bathrooms ??
-        "-"
-      } ห้องน้ำ`;
-
+      `🚿 ${condo.bathrooms ?? "-"} ห้องน้ำ`;
 
 
     document
@@ -869,11 +1285,7 @@ async function loadCondo() {
         "size"
       )
       .textContent =
-      `📐 ${
-        condo.size_sqm ??
-        "-"
-      } ตร.ม.`;
-
+      `📐 ${condo.size_sqm ?? "-"} ตร.ม.`;
 
 
     document
@@ -881,11 +1293,7 @@ async function loadCondo() {
         "floor"
       )
       .textContent =
-      `🏢 ชั้น ${
-        condo.floor ??
-        "-"
-      }`;
-
+      `🏢 ชั้น ${condo.floor ?? "-"}`;
 
 
     document
@@ -895,34 +1303,6 @@ async function loadCondo() {
       .textContent =
       condo.contact ||
       "ไม่ระบุช่องทางติดต่อ";
-
-
-
-    const contactButton =
-      document.getElementById(
-        "contactButton"
-      );
-
-
-
-    if (
-      condo.contact
-    ) {
-
-      contactButton.href =
-        `https://www.google.com/search?q=${encodeURIComponent(
-          condo.contact
-        )}`;
-
-    }
-
-    else {
-
-      contactButton.style.display =
-        "none";
-
-    }
-
 
 
     loading.style.display =
@@ -938,11 +1318,6 @@ async function loadCondo() {
   catch(error) {
 
 
-    console.error(
-      error
-    );
-
-
     loading.style.display =
       "none";
 
@@ -951,19 +1326,10 @@ async function loadCondo() {
       "block";
 
 
-    errorBox.innerHTML = `
+    errorBox.textContent =
+      "❌ " +
+      error.message;
 
-      ❌ ${escapeHTML(
-        error.message
-      )}
-
-      <br><br>
-
-      <a href="/">
-        กลับหน้าหลัก
-      </a>
-
-    `;
 
   }
 
@@ -978,5 +1344,4 @@ loadCondo();
 
 
 </body>
-
 </html>
