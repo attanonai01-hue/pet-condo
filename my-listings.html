@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1.0"
+>
+
+<title>ประกาศของฉัน | Pet Condo</title>
+
+<style>
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+
+  background: #f6f6f6;
+
+  color: #222;
+}
+
+header {
+  background: white;
+
+  padding: 16px 20px;
+
+  display: flex;
+
+  justify-content:
+    space-between;
+
+  align-items: center;
+
+  border-bottom:
+    1px solid #eee;
+}
+
+.logo {
+  color: #222;
+
+  text-decoration: none;
+
+  font-size: 22px;
+
+  font-weight: 700;
+}
+
+.account {
+  color: #222;
+
+  text-decoration: none;
+
+  font-weight: 600;
+}
+
+.container {
+  max-width: 900px;
+
+  margin: auto;
+
+  padding:
+    30px 16px
+    60px;
+}
+
+.top {
+  display: flex;
+
+  justify-content:
+    space-between;
+
+  align-items: center;
+
+  gap: 15px;
+
+  margin-bottom: 25px;
+}
+
+h1 {
+  margin: 0;
+
+  font-size: 30px;
+}
+
+.add-button {
+  background: #111;
+
+  color: white;
+
+  padding:
+    12px 15px;
+
+  border-radius: 12px;
+
+  text-decoration: none;
+
+  font-weight: 700;
+
+  white-space:
+    nowrap;
+}
+
+.user-box {
+  background: #ecfdf3;
+
+  color: #067647;
+
+  border-radius: 13px;
+
+  padding: 13px;
+
+  margin-bottom: 20px;
+
+  word-break:
+    break-word;
+}
+
+.grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      auto-fit,
+      minmax(260px,1fr)
+    );
+
+  gap: 18px;
+}
+
+.card {
+  background: white;
+
+  border-radius: 18px;
+
+  overflow: hidden;
+
+  box-shadow:
+    0 2px 14px
+    rgba(0,0,0,.07);
+}
+
+.image {
+  width: 100%;
+
+  height: 190px;
+
+  background: #ddd;
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  font-size: 60px;
+
+  overflow: hidden;
+}
+
+.image img {
+  width: 100%;
+
+  height: 100%;
+
+  object-fit: cover;
+}
+
+.content {
+  padding: 18px;
+}
+
+.content h2 {
+  margin:
+    0 0 8px;
+
+  font-size: 20px;
+}
+
+.location {
+  color: #777;
+
+  margin-bottom: 12px;
+}
+
+.price {
+  font-size: 20px;
+
+  font-weight: 700;
+
+  margin-bottom: 16px;
+}
+
+.actions {
+  display: grid;
+
+  grid-template-columns:
+    1fr 1fr;
+
+  gap: 8px;
+}
+
+.edit {
+  border: 0;
+
+  border-radius: 11px;
+
+  background: #111;
+
+  color: white;
+
+  padding: 12px;
+
+  text-align: center;
+
+  text-decoration: none;
+
+  font-weight: 600;
+}
+
+.delete {
+  border:
+    1px solid #f0b4b4;
+
+  border-radius: 11px;
+
+  background: #fff;
+
+  color: #b42318;
+
+  padding: 12px;
+
+  font-size: 15px;
+
+  font-weight: 600;
+}
+
+.view {
+  display: block;
+
+  text-align: center;
+
+  margin-top: 8px;
+
+  padding: 10px;
+
+  color: #444;
+
+  text-decoration: none;
+}
+
+#status {
+  text-align: center;
+
+  padding: 50px 20px;
+
+  color: #777;
+}
+
+#error {
+  display: none;
+
+  background: #fff0ee;
+
+  color: #b42318;
+
+  padding: 16px;
+
+  border-radius: 13px;
+
+  margin-bottom: 20px;
+}
+
+.empty {
+  background: white;
+
+  border-radius: 18px;
+
+  padding: 50px 20px;
+
+  text-align: center;
+}
+
+@media(max-width:600px) {
+
+  .top {
+    align-items:
+      flex-start;
+  }
+
+  h1 {
+    font-size: 27px;
+  }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<header>
+
+<a
+  href="/"
+  class="logo"
+>
+  🐾 Pet Condo
+</a>
+
+
+<a
+  href="/auth.html"
+  class="account"
+>
+  บัญชีของฉัน
+</a>
+
+</header>
+
+
+
+<main class="container">
+
+
+<div class="top">
+
+<h1>
+  ประกาศของฉัน
+</h1>
+
+
+<a
+  href="/post.html"
+  class="add-button"
+>
+  + ลงประกาศ
+</a>
+
+</div>
+
+
+<div
+  id="userBox"
+  class="user-box"
+  style="display:none"
+></div>
+
+
+<div id="error"></div>
+
+
+<div id="status">
+  กำลังโหลดประกาศ...
+</div>
+
+
+<div
+  id="grid"
+  class="grid"
+></div>
+
+
+</main>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+
+<script>
+
+const SUPABASE_URL =
+  "https://bttmrtsfbuuaajpxxadg.supabase.co";
+
+
+const SUPABASE_KEY =
+  "sb_publishable_LYAOus5geJw0WXkhOycJUQ_n0XYPgre";
+
+
+const supabaseClient =
+  window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY,
+    {
+      auth: {
+        persistSession: true,
+        autoRefreshToken: true,
+        detectSessionInUrl: true,
+        flowType: "pkce"
+      }
+    }
+  );
+
+
+let listings = [];
+
+
+function escapeHTML(value) {
+  return String(value ?? "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+}
+
+
+function safeUrl(value) {
+  try {
+    const url =
+      new URL(value);
+
+    if (
+      url.protocol === "https:" ||
+      url.protocol === "http:"
+    ) {
+      return url.href;
+    }
+  }
+
+  catch {}
+
+  return null;
+}
+
+
+function getCover(listing) {
+
+  const images =
+    Array.isArray(
+      listing.listing_images
+    )
+      ? [...listing.listing_images]
+      : [];
+
+
+  images.sort(
+    (a,b) =>
+      Number(a.sort_order || 0) -
+      Number(b.sort_order || 0)
+  );
+
+
+  return (
+    safeUrl(
+      images[0]?.image_url
+    )
+    ||
+    safeUrl(
+      listing.image_url
+    )
+  );
+}
+
+
+function storagePathFromUrl(
+  value
+) {
+
+  if (!value) {
+    return null;
+  }
+
+
+  try {
+    const url =
+      new URL(value);
+
+
+    const marker =
+      "/storage/v1/object/public/listing-images/";
+
+
+    const index =
+      url.pathname.indexOf(
+        marker
+      );
+
+
+    if (
+      index === -1
+    ) {
+      return null;
+    }
+
+
+    return decodeURIComponent(
+      url.pathname.slice(
+        index +
+        marker.length
+      )
+    );
+
+  }
+
+  catch {
+    return null;
+  }
+
+}
+
+
+async function getSession() {
+
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
+      .auth
+      .getSession();
+
+
+  if (
+    error ||
+    !data.session
+  ) {
+    return null;
+  }
+
+
+  return data.session;
+}
+
+
+async function loadListings() {
+
+  const status =
+    document.getElementById(
+      "status"
+    );
+
+
+  try {
+
+    const {
+      data: userData,
+      error: userError
+    } =
+      await supabaseClient
+        .auth
+        .getUser();
+
+
+    if (
+      userError ||
+      !userData.user
+    ) {
+
+      window.location.href =
+        "/auth.html";
+
+      return;
+    }
+
+
+    document
+      .getElementById(
+        "userBox"
+      )
+      .style.display =
+      "block";
+
+
+    document
+      .getElementById(
+        "userBox"
+      )
+      .textContent =
+      `✓ ${userData.user.email}`;
+
+
+    const session =
+      await getSession();
+
+
+    if (!session) {
+
+      window.location.href =
+        "/auth.html";
+
+      return;
+    }
+
+
+    const response =
+      await fetch(
+        "/api/my-listings",
+        {
+          headers: {
+            Authorization:
+              `Bearer ${session.access_token}`
+          },
+
+          cache:
+            "no-store"
+        }
+      );
+
+
+    const result =
+      await response.json();
+
+
+    if (!response.ok) {
+      throw new Error(
+        result.error ||
+        "โหลดข้อมูลไม่สำเร็จ"
+      );
+    }
+
+
+    listings =
+      result;
+
+
+    renderListings();
+
+  }
+
+  catch(error) {
+
+    status.style.display =
+      "none";
+
+
+    const errorBox =
+      document.getElementById(
+        "error"
+      );
+
+
+    errorBox.style.display =
+      "block";
+
+
+    errorBox.textContent =
+      "❌ " +
+      error.message;
+  }
+}
+
+
+function renderListings() {
+
+  const status =
+    document.getElementById(
+      "status"
+    );
+
+
+  const grid =
+    document.getElementById(
+      "grid"
+    );
+
+
+  status.style.display =
+    "none";
+
+
+  grid.innerHTML =
+    "";
+
+
+  if (
+    listings.length === 0
+  ) {
+
+    grid.innerHTML = `
+
+      <div class="empty">
+
+        <h2>
+          ยังไม่มีประกาศ
+        </h2>
+
+        <p>
+          เริ่มลงประกาศคอนโดแรกของคุณได้เลย
+        </p>
+
+        <a
+          href="/post.html"
+          class="add-button"
+        >
+          + ลงประกาศ
+        </a>
+
+      </div>
+
+    `;
+
+    return;
+  }
+
+
+  listings.forEach(
+    function(listing) {
+
+      const card =
+        document.createElement(
+          "article"
+        );
+
+
+      card.className =
+        "card";
+
+
+      const cover =
+        getCover(
+          listing
+        );
+
+
+      const imageHTML =
+        cover
+          ? `
+            <img
+              src="${escapeHTML(cover)}"
+              alt=""
+              loading="lazy"
+            >
+          `
+          : "🏢";
+
+
+      card.innerHTML = `
+
+        <div class="image">
+          ${imageHTML}
+        </div>
+
+        <div class="content">
+
+          <h2>
+            ${escapeHTML(
+              listing.condo_name
+            )}
+          </h2>
+
+          <div class="location">
+            📍 ${escapeHTML(
+              listing.location
+            )}
+          </div>
+
+          <div class="price">
+            ฿${Number(
+              listing.price || 0
+            ).toLocaleString(
+              "th-TH"
+            )} / เดือน
+          </div>
+
+          <div class="actions">
+
+            <a
+              class="edit"
+              href="/edit-listing.html?id=${encodeURIComponent(listing.id)}"
+            >
+              ✏️ แก้ไข
+            </a>
+
+            <button
+              class="delete"
+              type="button"
+              data-id="${escapeHTML(listing.id)}"
+            >
+              🗑️ ลบ
+            </button>
+
+          </div>
+
+          <a
+            class="view"
+            href="/condo.html?id=${encodeURIComponent(listing.id)}"
+          >
+            ดูหน้าประกาศ
+          </a>
+
+        </div>
+
+      `;
+
+
+      card
+        .querySelector(
+          ".delete"
+        )
+        .addEventListener(
+          "click",
+          function() {
+
+            deleteListing(
+              listing
+            );
+
+          }
+        );
+
+
+      grid.appendChild(
+        card
+      );
+    }
+  );
+}
+
+
+async function deleteListing(
+  listing
+) {
+
+  const answer =
+    confirm(
+      `ต้องการลบ "${listing.condo_name}" ใช่หรือไม่?\n\nเมื่อลบแล้วไม่สามารถกู้คืนจากหน้าเว็บได้`
+    );
+
+
+  if (!answer) {
+    return;
+  }
+
+
+  const secondAnswer =
+    confirm(
+      "ยืนยันอีกครั้งว่าต้องการลบประกาศนี้"
+    );
+
+
+  if (!secondAnswer) {
+    return;
+  }
+
+
+  try {
+
+    const session =
+      await getSession();
+
+
+    if (!session) {
+
+      window.location.href =
+        "/auth.html";
+
+      return;
+    }
+
+
+    const response =
+      await fetch(
+        `/api/listing?id=${encodeURIComponent(listing.id)}`,
+        {
+          method:
+            "DELETE",
+
+          headers: {
+            Authorization:
+              `Bearer ${session.access_token}`
+          }
+        }
+      );
+
+
+    const result =
+      await response.json();
+
+
+    if (!response.ok) {
+      throw new Error(
+        result.error ||
+        "ลบประกาศไม่สำเร็จ"
+      );
+    }
+
+
+    /*
+      ลบไฟล์จริงออกจาก Storage
+      หลัง Database ลบสำเร็จ
+    */
+
+    const paths =
+      Array.from(
+        new Set(
+          (
+            result.image_urls || []
+          )
+          .map(
+            storagePathFromUrl
+          )
+          .filter(Boolean)
+        )
+      );
+
+
+    if (
+      paths.length > 0
+    ) {
+
+      const {
+        error
+      } =
+        await supabaseClient
+          .storage
+          .from(
+            "listing-images"
+          )
+          .remove(
+            paths
+          );
+
+
+      if (error) {
+        console.error(
+          "Storage cleanup:",
+          error
+        );
+      }
+    }
+
+
+    listings =
+      listings.filter(
+        item =>
+          item.id !==
+          listing.id
+      );
+
+
+    renderListings();
+
+
+    alert(
+      "ลบประกาศเรียบร้อย"
+    );
+
+  }
+
+  catch(error) {
+
+    alert(
+      "❌ " +
+      error.message
+    );
+
+  }
+}
+
+
+loadListings();
+
+</script>
+
+
+</body>
+
+</html>
