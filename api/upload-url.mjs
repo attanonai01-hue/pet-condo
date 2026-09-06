@@ -25,6 +25,7 @@ function json(data, status = 200) {
     JSON.stringify(data),
     {
       status,
+
       headers: {
         "Content-Type":
           "application/json; charset=utf-8",
@@ -38,7 +39,7 @@ function json(data, status = 200) {
 
 
 /* =========================================
-   ตรวจ User JWT กับ Supabase Auth จริง
+   ตรวจ USER JWT กับ Supabase Auth
 ========================================= */
 
 async function verifyUser(
@@ -46,6 +47,7 @@ async function verifyUser(
   url,
   publishableKey
 ) {
+
   const authHeader =
     request.headers.get(
       "authorization"
@@ -57,6 +59,7 @@ async function verifyUser(
       "Bearer "
     )
   ) {
+
     return null;
   }
 
@@ -74,7 +77,8 @@ async function verifyUser(
     await fetch(
       `${url}/auth/v1/user`,
       {
-        method: "GET",
+        method:
+          "GET",
 
         headers: {
           apikey:
@@ -91,6 +95,12 @@ async function verifyUser(
 
 
   if (!response.ok) {
+
+    console.error(
+      "Auth verification failed:",
+      response.status
+    );
+
     return null;
   }
 
@@ -103,6 +113,7 @@ async function verifyUser(
     !user ||
     !user.id
   ) {
+
     return null;
   }
 
@@ -127,6 +138,10 @@ export async function POST(request) {
   } = getConfig();
 
 
+  /* =====================================
+     1. ตรวจ Environment
+  ===================================== */
+
   if (
     !url ||
     !publishableKey ||
@@ -148,9 +163,9 @@ export async function POST(request) {
   }
 
 
-  /* -----------------------------------------
-     1. ตรวจ User
-  ----------------------------------------- */
+  /* =====================================
+     2. ตรวจ User จริง
+  ===================================== */
 
   const auth =
     await verifyUser(
@@ -165,16 +180,22 @@ export async function POST(request) {
     return json(
       {
         error:
-          "กรุณาเข้าสู่ระบบ"
+          "กรุณาเข้าสู่ระบบใหม่"
       },
       401
     );
   }
 
 
-  const user =
-    auth.user;
+  const {
+    user,
+    token
+  } = auth;
 
+
+  /* =====================================
+     3. ต้องยืนยัน Email
+  ===================================== */
 
   if (
     !user.email_confirmed_at &&
@@ -191,9 +212,35 @@ export async function POST(request) {
   }
 
 
-  /* -----------------------------------------
-     2. รับข้อมูลไฟล์
-  ----------------------------------------- */
+  /* =====================================
+     4. ตรวจ Content-Type ของ Request
+  ===================================== */
+
+  const requestContentType =
+    request.headers.get(
+      "content-type"
+    ) || "";
+
+
+  if (
+    !requestContentType.includes(
+      "application/json"
+    )
+  ) {
+
+    return json(
+      {
+        error:
+          "Invalid content type"
+      },
+      415
+    );
+  }
+
+
+  /* =====================================
+     5. อ่าน Body
+  ===================================== */
 
   let body;
 
@@ -221,8 +268,8 @@ export async function POST(request) {
     String(
       body.content_type || ""
     )
-    .trim()
-    .toLowerCase();
+      .trim()
+      .toLowerCase();
 
 
   const fileSize =
@@ -231,11 +278,12 @@ export async function POST(request) {
     );
 
 
-  /* -----------------------------------------
-     3. จำกัด MIME
-  ----------------------------------------- */
+  /* =====================================
+     6. MIME Whitelist
+  ===================================== */
 
   const allowedTypes = {
+
     "image/jpeg":
       "jpg",
 
@@ -244,6 +292,7 @@ export async function POST(request) {
 
     "image/webp":
       "webp"
+
   };
 
 
@@ -265,18 +314,21 @@ export async function POST(request) {
   }
 
 
-  /* -----------------------------------------
-     4. จำกัดขนาด 10 MB ที่ API อีกชั้น
-  ----------------------------------------- */
+  /* =====================================
+     7. จำกัด 10 MB ที่ Server
+  ===================================== */
 
-  const MAX_SIZE =
+  const MAX_FILE_SIZE =
     10 * 1024 * 1024;
 
 
   if (
-    !Number.isFinite(fileSize) ||
+    !Number.isFinite(
+      fileSize
+    ) ||
     fileSize <= 0 ||
-    fileSize > MAX_SIZE
+    fileSize >
+      MAX_FILE_SIZE
   ) {
 
     return json(
@@ -289,291 +341,294 @@ export async function POST(request) {
   }
 
 
-  /*
-    ไม่ใช้ชื่อไฟล์จาก User
-    ป้องกัน path traversal / ชื่อแปลก ๆ
-  */
+  /* =====================================
+     8. ให้ DATABASE ตรวจ Upload quota
+
+     สำคัญ:
+     ใช้ USER JWT
+     เพื่อให้ auth.uid() ทำงานจริง
+  ===================================== */
+
+  const grantResponse =
+    await fetch(
+      `${url}/rest/v1/rpc/request_storage_upload_grant_v2`,
+      {
+        method:
+          "POST",
+
+        headers: {
+
+          apikey:
+            publishableKey,
+
+          Authorization:
+            `Bearer ${token}`,
+
+          "Content-Type":
+            "application/json"
+
+        },
+
+        body:
+          JSON.stringify({}),
+
+        cache:
+          "no-store"
+      }
+    );
+
+
+  const grantText =
+    await grantResponse.text();
+
+
+  if (!grantResponse.ok) {
+
+    console.error(
+      "Upload grant V2 error:",
+      grantResponse.status,
+      grantText
+    );
+
+
+    if (
+      grantText.includes(
+        "HOURLY_UPLOAD_LIMIT"
+      )
+    ) {
+
+      return json(
+        {
+          error:
+            "อัปโหลดครบ 20 รูปต่อชั่วโมงแล้ว กรุณารอก่อน"
+        },
+        429
+      );
+    }
+
+
+    if (
+      grantText.includes(
+        "DAILY_UPLOAD_LIMIT"
+      )
+    ) {
+
+      return json(
+        {
+          error:
+            "อัปโหลดครบ 100 รูปภายใน 24 ชั่วโมงแล้ว"
+        },
+        429
+      );
+    }
+
+
+    if (
+      grantText.includes(
+        "NOT_AUTHENTICATED"
+      )
+    ) {
+
+      return json(
+        {
+          error:
+            "Session ไม่ถูกต้อง กรุณา Login ใหม่"
+        },
+        401
+      );
+    }
+
+
+    return json(
+      {
+        error:
+          "ไม่สามารถอนุญาตการอัปโหลดได้"
+      },
+      500
+    );
+  }
+
+
+  /* =====================================
+     9. สร้างชื่อไฟล์ฝั่ง Server
+
+     ไม่ใช้ชื่อไฟล์จาก User
+  ===================================== */
 
   const fileName =
     `${Date.now()}-${crypto.randomUUID()}.${extension}`;
 
 
   /*
-    Folder แรกเป็น User UUID
+    User แต่ละคนถูกแยก Folder
   */
 
   const path =
     `${user.id}/listings/${fileName}`;
 
 
-  try {
-
-    /* =====================================
-       5. ใช้ Database Rate Limit
-
-       20 รูป / ชั่วโมง
-       100 รูป / 24 ชั่วโมง
-    ===================================== */
-
-    const grantResponse =
-      await fetch(
-        `${url}/rest/v1/rpc/request_storage_upload_grant`,
-        {
-          method: "POST",
-
-          headers: {
-
-            /*
-              sb_secret_ ใช้เฉพาะ apikey
-              ห้ามส่งกลับไป Browser
-            */
-
-            apikey:
-              secretKey,
-
-            "Content-Type":
-              "application/json"
-          },
-
-          body:
-            JSON.stringify({
-              p_user_id:
-                user.id
-            }),
-
-          cache:
-            "no-store"
-        }
-      );
-
-
-    if (!grantResponse.ok) {
-
-      const grantError =
-        await grantResponse.text();
-
-
-      console.error(
-        "Upload grant error:",
-        grantResponse.status,
-        grantError
-      );
-
-
-      if (
-        grantError.includes(
-          "Hourly upload limit reached"
-        )
-      ) {
-
-        return json(
-          {
-            error:
-              "อัปโหลดรูปครบ 20 รูปต่อชั่วโมงแล้ว กรุณารอสักครู่"
-          },
-          429
-        );
-      }
-
-
-      if (
-        grantError.includes(
-          "Daily upload limit reached"
-        )
-      ) {
-
-        return json(
-          {
-            error:
-              "อัปโหลดรูปครบ 100 รูปต่อวันแล้ว"
-          },
-          429
-        );
-      }
-
-
-      return json(
-        {
-          error:
-            "ไม่สามารถอนุญาตการอัปโหลดได้"
-        },
-        500
-      );
-    }
-
-
-    /* =====================================
-       6. สร้าง Signed Upload URL
-
-       Secret Key อยู่บน Server เท่านั้น
-    ===================================== */
-
-    const encodedPath =
-      path
-        .split("/")
-        .map(
-          encodeURIComponent
-        )
-        .join("/");
-
-
-    const signedResponse =
-      await fetch(
-        `${url}/storage/v1/object/upload/sign/listing-images/${encodedPath}`,
-        {
-          method: "POST",
-
-          headers: {
-
-            apikey:
-              secretKey,
-
-            "Content-Type":
-              "application/json"
-          },
-
-          body:
-            JSON.stringify({}),
-
-          cache:
-            "no-store"
-        }
-      );
-
-
-    const signedText =
-      await signedResponse.text();
-
-
-    if (!signedResponse.ok) {
-
-      console.error(
-        "Signed upload error:",
-        signedResponse.status,
-        signedText
-      );
-
-
-      return json(
-        {
-          error:
-            "สร้างสิทธิ์อัปโหลดรูปไม่สำเร็จ"
-        },
-        500
-      );
-    }
-
-
-    let signedData;
-
-
-    try {
-
-      signedData =
-        JSON.parse(
-          signedText
-        );
-
-    }
-
-    catch {
-
-      return json(
-        {
-          error:
-            "Signed upload response ไม่ถูกต้อง"
-        },
-        500
-      );
-    }
-
-
-    /*
-      Supabase ส่ง URL ที่มี token กลับมา
-    */
-
-    const returnedUrl =
-      signedData.url ||
-      signedData.signedURL ||
-      signedData.signedUrl;
-
-
-    if (!returnedUrl) {
-
-      console.error(
-        "No signed URL:",
-        signedData
-      );
-
-
-      return json(
-        {
-          error:
-            "ไม่พบ Signed Upload URL"
-        },
-        500
-      );
-    }
-
-
-    const fullSignedUrl =
-      returnedUrl.startsWith(
-        "http"
+  const encodedPath =
+    path
+      .split("/")
+      .map(
+        part =>
+          encodeURIComponent(
+            part
+          )
       )
-        ? returnedUrl
-        : `${url}/storage/v1${returnedUrl}`;
+      .join("/");
 
 
-    const parsedUrl =
-      new URL(
-        fullSignedUrl
-      );
+  /* =====================================
+     10. สร้าง SIGNED UPLOAD URL
 
+     SECRET KEY ใช้ตรงนี้เท่านั้น
 
-    const uploadToken =
-      parsedUrl.searchParams.get(
-        "token"
-      );
+     ห้ามส่ง Secret Key กลับ Browser
+  ===================================== */
 
+  const signedResponse =
+    await fetch(
+      `${url}/storage/v1/object/upload/sign/listing-images/${encodedPath}`,
+      {
+        method:
+          "POST",
 
-    if (!uploadToken) {
+        headers: {
 
-      return json(
-        {
-          error:
-            "ไม่พบ Upload Token"
+          /*
+            sb_secret_ เป็น opaque API key
+            จึงส่งใน apikey header
+          */
+
+          apikey:
+            secretKey,
+
+          "Content-Type":
+            "application/json",
+
+          "x-upsert":
+            "false"
+
         },
-        500
-      );
-    }
+
+        body:
+          JSON.stringify({}),
+
+        cache:
+          "no-store"
+      }
+    );
 
 
-    /* =====================================
-       7. ส่งเฉพาะข้อมูลที่ Browser ต้องใช้
+  const signedText =
+    await signedResponse.text();
 
-       ❌ ไม่ส่ง Secret Key
-    ===================================== */
+
+  if (!signedResponse.ok) {
+
+    console.error(
+      "Create signed upload error:",
+      signedResponse.status,
+      signedText
+    );
+
 
     return json(
       {
-        success:
-          true,
-
-        path:
-          path,
-
-        token:
-          uploadToken
+        error:
+          "สร้างสิทธิ์อัปโหลดรูปไม่สำเร็จ"
       },
-      200
+      500
     );
+  }
+
+
+  /* =====================================
+     11. อ่าน Token
+  ===================================== */
+
+  let signedData;
+
+
+  try {
+
+    signedData =
+      JSON.parse(
+        signedText
+      );
+
+  }
+
+  catch {
+
+    console.error(
+      "Invalid signed upload response:",
+      signedText
+    );
+
+
+    return json(
+      {
+        error:
+          "ระบบอัปโหลดตอบกลับไม่ถูกต้อง"
+      },
+      500
+    );
+  }
+
+
+  /*
+    Storage API จะคืน path ที่มี
+    ?token=...
+  */
+
+  const returnedUrl =
+    signedData.url ||
+    signedData.signedUrl ||
+    signedData.signedURL;
+
+
+  if (!returnedUrl) {
+
+    console.error(
+      "Signed URL missing:",
+      signedData
+    );
+
+
+    return json(
+      {
+        error:
+          "ไม่พบ Signed Upload URL"
+      },
+      500
+    );
+  }
+
+
+  let signedUrl;
+
+
+  try {
+
+    signedUrl =
+      returnedUrl.startsWith(
+        "http"
+      )
+        ? new URL(
+            returnedUrl
+          )
+        : new URL(
+            `${url}/storage/v1${returnedUrl}`
+          );
 
   }
 
   catch(error) {
 
     console.error(
-      "upload-url error:",
+      "Signed URL parse error:",
       error
     );
 
@@ -581,9 +636,58 @@ export async function POST(request) {
     return json(
       {
         error:
-          "เกิดข้อผิดพลาด กรุณาลองใหม่"
+          "Signed URL ไม่ถูกต้อง"
       },
       500
     );
   }
+
+
+  const uploadToken =
+    signedUrl.searchParams
+      .get(
+        "token"
+      );
+
+
+  if (!uploadToken) {
+
+    console.error(
+      "Upload token missing"
+    );
+
+
+    return json(
+      {
+        error:
+          "ไม่พบ Upload Token"
+      },
+      500
+    );
+  }
+
+
+  /* =====================================
+     12. ส่งกลับ Browser
+
+     มีแค่:
+     - path
+     - temporary token
+
+     ไม่มี SECRET KEY
+  ===================================== */
+
+  return json(
+    {
+      success:
+        true,
+
+      path:
+        path,
+
+      token:
+        uploadToken
+    },
+    200
+  );
 }
