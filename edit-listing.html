@@ -1,0 +1,1729 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1.0"
+>
+
+<title>แก้ไขประกาศ | Pet Condo</title>
+
+<style>
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+
+  background: #f6f6f6;
+
+  color: #222;
+}
+
+header {
+  background: white;
+
+  padding: 16px 20px;
+
+  display: flex;
+
+  justify-content:
+    space-between;
+
+  align-items: center;
+
+  border-bottom:
+    1px solid #eee;
+}
+
+.logo {
+  color: #222;
+
+  text-decoration: none;
+
+  font-size: 22px;
+
+  font-weight: 700;
+}
+
+.back {
+  color: #222;
+
+  text-decoration: none;
+
+  font-weight: 600;
+}
+
+.container {
+  width: 100%;
+
+  max-width: 700px;
+
+  margin: auto;
+
+  padding:
+    30px 18px
+    60px;
+}
+
+h1 {
+  margin:
+    0 0 8px;
+
+  font-size: 30px;
+}
+
+.subtitle {
+  color: #777;
+
+  margin-bottom: 24px;
+}
+
+.form-card {
+  display: none;
+
+  background: white;
+
+  border-radius: 20px;
+
+  padding: 23px;
+
+  box-shadow:
+    0 2px 15px
+    rgba(0,0,0,.06);
+}
+
+.field {
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+
+  margin-bottom: 8px;
+
+  font-weight: 600;
+}
+
+input,
+textarea {
+  width: 100%;
+
+  border:
+    1px solid #ddd;
+
+  border-radius: 13px;
+
+  padding: 14px;
+
+  font-size: 16px;
+
+  font-family: inherit;
+}
+
+textarea {
+  min-height: 130px;
+}
+
+.row {
+  display: grid;
+
+  grid-template-columns:
+    1fr 1fr;
+
+  gap: 14px;
+}
+
+.pet-box {
+  background: #f7f7f7;
+
+  padding: 16px;
+
+  border-radius: 14px;
+
+  margin-bottom: 20px;
+}
+
+.pet-option {
+  display: flex;
+
+  align-items: center;
+
+  margin:
+    12px 0;
+
+  font-weight: 400;
+}
+
+.pet-option input {
+  width: 21px;
+
+  height: 21px;
+
+  margin-right: 10px;
+}
+
+.image-box {
+  border:
+    2px dashed #ccc;
+
+  border-radius: 16px;
+
+  padding: 16px;
+
+  background: #fafafa;
+}
+
+.preview-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3,1fr);
+
+  gap: 8px;
+
+  margin-bottom: 15px;
+}
+
+.preview {
+  position: relative;
+
+  aspect-ratio:
+    1 / 1;
+
+  border-radius: 11px;
+
+  overflow: hidden;
+
+  background: #ddd;
+}
+
+.preview img {
+  width: 100%;
+
+  height: 100%;
+
+  object-fit: cover;
+}
+
+.remove {
+  position: absolute;
+
+  top: 5px;
+
+  right: 5px;
+
+  width: 29px;
+
+  height: 29px;
+
+  border: 0;
+
+  border-radius: 50%;
+
+  background:
+    rgba(0,0,0,.75);
+
+  color: white;
+
+  font-size: 17px;
+}
+
+.cover {
+  position: absolute;
+
+  left: 5px;
+
+  bottom: 5px;
+
+  background: white;
+
+  padding:
+    4px 7px;
+
+  border-radius: 10px;
+
+  font-size: 10px;
+
+  font-weight: 700;
+}
+
+.image-info {
+  color: #777;
+
+  font-size: 13px;
+
+  line-height: 1.5;
+
+  margin-top: 8px;
+}
+
+.save {
+  width: 100%;
+
+  border: 0;
+
+  border-radius: 14px;
+
+  background: #111;
+
+  color: white;
+
+  padding: 16px;
+
+  font-size: 17px;
+
+  font-weight: 700;
+}
+
+.save:disabled {
+  opacity: .5;
+}
+
+#loading {
+  text-align: center;
+
+  padding: 60px 20px;
+
+  color: #777;
+}
+
+#message {
+  display: none;
+
+  padding: 14px;
+
+  border-radius: 13px;
+
+  margin-bottom: 20px;
+}
+
+#message.error {
+  display: block;
+
+  background: #fff0ee;
+
+  color: #b42318;
+}
+
+#message.success {
+  display: block;
+
+  background: #ecfdf3;
+
+  color: #067647;
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<header>
+
+<a
+  href="/"
+  class="logo"
+>
+  🐾 Pet Condo
+</a>
+
+
+<a
+  href="/my-listings.html"
+  class="back"
+>
+  ← ประกาศของฉัน
+</a>
+
+</header>
+
+
+
+<main class="container">
+
+
+<h1>
+  แก้ไขประกาศ
+</h1>
+
+
+<div class="subtitle">
+  แก้ไขข้อมูลและรูปภาพของประกาศคุณ
+</div>
+
+
+<div id="loading">
+  กำลังโหลดข้อมูล...
+</div>
+
+
+<div id="message"></div>
+
+
+
+<div
+  id="formCard"
+  class="form-card"
+>
+
+
+<form id="editForm">
+
+
+<div class="field">
+
+<label>
+  รูปคอนโด
+</label>
+
+
+<div class="image-box">
+
+<div
+  id="previewGrid"
+  class="preview-grid"
+></div>
+
+
+<input
+  id="newImages"
+  type="file"
+  accept="image/jpeg,image/png,image/webp"
+  multiple
+>
+
+
+<div class="image-info">
+  สูงสุดรวม 10 รูป • รูปละไม่เกิน 5 MB
+</div>
+
+</div>
+
+</div>
+
+
+
+<div class="field">
+
+<label>
+  ชื่อคอนโด *
+</label>
+
+<input
+  id="condoName"
+  maxlength="120"
+  required
+>
+
+</div>
+
+
+
+<div class="field">
+
+<label>
+  ทำเล *
+</label>
+
+<input
+  id="location"
+  maxlength="200"
+  required
+>
+
+</div>
+
+
+
+<div class="field">
+
+<label>
+  ค่าเช่า / เดือน *
+</label>
+
+<input
+  id="price"
+  type="number"
+  min="1"
+  max="10000000"
+  required
+>
+
+</div>
+
+
+
+<div class="row">
+
+<div class="field">
+
+<label>
+  ห้องนอน
+</label>
+
+<input
+  id="bedrooms"
+  type="number"
+  min="0"
+  max="20"
+>
+
+</div>
+
+
+<div class="field">
+
+<label>
+  ห้องน้ำ
+</label>
+
+<input
+  id="bathrooms"
+  type="number"
+  min="0"
+  max="20"
+>
+
+</div>
+
+</div>
+
+
+
+<div class="row">
+
+<div class="field">
+
+<label>
+  ขนาด ตร.ม.
+</label>
+
+<input
+  id="size"
+  type="number"
+  min="0"
+  max="10000"
+  step="0.01"
+>
+
+</div>
+
+
+<div class="field">
+
+<label>
+  ชั้น
+</label>
+
+<input
+  id="floor"
+  type="number"
+  min="-10"
+  max="300"
+>
+
+</div>
+
+</div>
+
+
+
+<div class="pet-box">
+
+<strong>
+  สัตว์เลี้ยงที่อนุญาต
+</strong>
+
+
+<label class="pet-option">
+
+<input
+  id="petDog"
+  type="checkbox"
+>
+
+🐶 เลี้ยงสุนัขได้
+
+</label>
+
+
+<label class="pet-option">
+
+<input
+  id="petCat"
+  type="checkbox"
+>
+
+🐱 เลี้ยงแมวได้
+
+</label>
+
+</div>
+
+
+
+<div class="field">
+
+<label>
+  รายละเอียด
+</label>
+
+<textarea
+  id="description"
+  maxlength="5000"
+></textarea>
+
+</div>
+
+
+
+<div class="field">
+
+<label>
+  ช่องทางติดต่อ
+</label>
+
+<input
+  id="contact"
+  maxlength="300"
+>
+
+</div>
+
+
+
+<button
+  id="saveButton"
+  class="save"
+  type="submit"
+>
+  บันทึกการแก้ไข
+</button>
+
+
+</form>
+
+</div>
+
+
+</main>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+
+<script>
+
+const SUPABASE_URL =
+  "https://bttmrtsfbuuaajpxxadg.supabase.co";
+
+
+const SUPABASE_KEY =
+  "sb_publishable_LYAOus5geJw0WXkhOycJUQ_n0XYPgre";
+
+
+const supabaseClient =
+  window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY,
+    {
+      auth: {
+        persistSession: true,
+        autoRefreshToken: true,
+        detectSessionInUrl: true,
+        flowType: "pkce"
+      }
+    }
+  );
+
+
+const listingId =
+  new URLSearchParams(
+    window.location.search
+  )
+  .get("id");
+
+
+let currentUser =
+  null;
+
+
+let listing =
+  null;
+
+
+let existingImages =
+  [];
+
+
+let removedImageIds =
+  new Set();
+
+
+let removedStoragePaths =
+  [];
+
+
+let newFiles =
+  [];
+
+
+let newlyUploadedPaths =
+  [];
+
+
+function message(
+  text,
+  type
+) {
+
+  const box =
+    document.getElementById(
+      "message"
+    );
+
+
+  box.className =
+    type;
+
+
+  box.textContent =
+    text;
+}
+
+
+function storagePathFromUrl(
+  value
+) {
+
+  try {
+
+    const url =
+      new URL(value);
+
+
+    const marker =
+      "/storage/v1/object/public/listing-images/";
+
+
+    const index =
+      url.pathname.indexOf(
+        marker
+      );
+
+
+    if (
+      index === -1
+    ) {
+      return null;
+    }
+
+
+    return decodeURIComponent(
+      url.pathname.slice(
+        index +
+        marker.length
+      )
+    );
+
+  }
+
+  catch {
+    return null;
+  }
+
+}
+
+
+async function getSession() {
+
+  const {
+    data
+  } =
+    await supabaseClient
+      .auth
+      .getSession();
+
+
+  return (
+    data.session ||
+    null
+  );
+}
+
+
+function activeExisting() {
+
+  return existingImages.filter(
+    image =>
+      !removedImageIds.has(
+        image.id
+      )
+  );
+
+}
+
+
+function renderImages() {
+
+  const grid =
+    document.getElementById(
+      "previewGrid"
+    );
+
+
+  grid.innerHTML =
+    "";
+
+
+  const current =
+    activeExisting();
+
+
+  current.forEach(
+    function(
+      image,
+      index
+    ) {
+
+      const item =
+        document.createElement(
+          "div"
+        );
+
+
+      item.className =
+        "preview";
+
+
+      item.innerHTML = `
+
+        <img
+          src="${image.image_url}"
+          alt=""
+        >
+
+        ${
+          index === 0
+            ? `<span class="cover">หน้าปก</span>`
+            : ""
+        }
+
+      `;
+
+
+      const remove =
+        document.createElement(
+          "button"
+        );
+
+
+      remove.className =
+        "remove";
+
+
+      remove.type =
+        "button";
+
+
+      remove.textContent =
+        "×";
+
+
+      remove.onclick =
+        function() {
+
+          removedImageIds.add(
+            image.id
+          );
+
+
+          const path =
+            storagePathFromUrl(
+              image.image_url
+            );
+
+
+          if (path) {
+
+            removedStoragePaths.push(
+              path
+            );
+
+          }
+
+
+          renderImages();
+
+        };
+
+
+      item.appendChild(
+        remove
+      );
+
+
+      grid.appendChild(
+        item
+      );
+
+    }
+  );
+
+
+  newFiles.forEach(
+    function(
+      file,
+      index
+    ) {
+
+      const item =
+        document.createElement(
+          "div"
+        );
+
+
+      item.className =
+        "preview";
+
+
+      const image =
+        document.createElement(
+          "img"
+        );
+
+
+      image.src =
+        URL.createObjectURL(
+          file
+        );
+
+
+      item.appendChild(
+        image
+      );
+
+
+      const remove =
+        document.createElement(
+          "button"
+        );
+
+
+      remove.type =
+        "button";
+
+
+      remove.className =
+        "remove";
+
+
+      remove.textContent =
+        "×";
+
+
+      remove.onclick =
+        function() {
+
+          newFiles.splice(
+            index,
+            1
+          );
+
+
+          renderImages();
+
+        };
+
+
+      item.appendChild(
+        remove
+      );
+
+
+      grid.appendChild(
+        item
+      );
+
+    }
+  );
+
+}
+
+
+async function initialize() {
+
+  if (!listingId) {
+
+    window.location.href =
+      "/my-listings.html";
+
+    return;
+  }
+
+
+  const {
+    data: userData,
+    error
+  } =
+    await supabaseClient
+      .auth
+      .getUser();
+
+
+  if (
+    error ||
+    !userData.user
+  ) {
+
+    window.location.href =
+      "/auth.html";
+
+    return;
+  }
+
+
+  currentUser =
+    userData.user;
+
+
+  const session =
+    await getSession();
+
+
+  if (!session) {
+
+    window.location.href =
+      "/auth.html";
+
+    return;
+  }
+
+
+  const response =
+    await fetch(
+      "/api/my-listings",
+      {
+        headers: {
+          Authorization:
+            `Bearer ${session.access_token}`
+        },
+
+        cache:
+          "no-store"
+      }
+    );
+
+
+  const rows =
+    await response.json();
+
+
+  listing =
+    rows.find(
+      item =>
+        String(item.id) ===
+        String(listingId)
+    );
+
+
+  if (!listing) {
+
+    message(
+      "ไม่พบประกาศ หรือคุณไม่มีสิทธิ์แก้ไข",
+      "error"
+    );
+
+
+    document
+      .getElementById(
+        "loading"
+      )
+      .style.display =
+      "none";
+
+
+    return;
+  }
+
+
+  existingImages =
+    Array.isArray(
+      listing.listing_images
+    )
+      ? [...listing.listing_images]
+      : [];
+
+
+  existingImages.sort(
+    (a,b) =>
+      Number(a.sort_order || 0) -
+      Number(b.sort_order || 0)
+  );
+
+
+  document
+    .getElementById(
+      "condoName"
+    )
+    .value =
+    listing.condo_name || "";
+
+
+  document
+    .getElementById(
+      "location"
+    )
+    .value =
+    listing.location || "";
+
+
+  document
+    .getElementById(
+      "price"
+    )
+    .value =
+    listing.price ?? "";
+
+
+  document
+    .getElementById(
+      "bedrooms"
+    )
+    .value =
+    listing.bedrooms ?? "";
+
+
+  document
+    .getElementById(
+      "bathrooms"
+    )
+    .value =
+    listing.bathrooms ?? "";
+
+
+  document
+    .getElementById(
+      "size"
+    )
+    .value =
+    listing.size_sqm ?? "";
+
+
+  document
+    .getElementById(
+      "floor"
+    )
+    .value =
+    listing.floor ?? "";
+
+
+  document
+    .getElementById(
+      "petDog"
+    )
+    .checked =
+    listing.pet_dog === true;
+
+
+  document
+    .getElementById(
+      "petCat"
+    )
+    .checked =
+    listing.pet_cat === true;
+
+
+  document
+    .getElementById(
+      "description"
+    )
+    .value =
+    listing.description || "";
+
+
+  document
+    .getElementById(
+      "contact"
+    )
+    .value =
+    listing.contact || "";
+
+
+  renderImages();
+
+
+  document
+    .getElementById(
+      "loading"
+    )
+    .style.display =
+    "none";
+
+
+  document
+    .getElementById(
+      "formCard"
+    )
+    .style.display =
+    "block";
+}
+
+
+document
+  .getElementById(
+    "newImages"
+  )
+  .addEventListener(
+    "change",
+    function() {
+
+      const selected =
+        Array.from(
+          this.files
+        );
+
+
+      const allowed = [
+        "image/jpeg",
+        "image/png",
+        "image/webp"
+      ];
+
+
+      for (
+        const file
+        of selected
+      ) {
+
+        if (
+          !allowed.includes(
+            file.type
+          )
+        ) {
+
+          message(
+            "รองรับเฉพาะ JPG PNG WEBP",
+            "error"
+          );
+
+          return;
+        }
+
+
+        if (
+          file.size >
+          5 * 1024 * 1024
+        ) {
+
+          message(
+            "มีรูปขนาดเกิน 5 MB",
+            "error"
+          );
+
+          return;
+        }
+      }
+
+
+      const total =
+        activeExisting().length +
+        newFiles.length +
+        selected.length;
+
+
+      if (
+        total > 10
+      ) {
+
+        message(
+          "หนึ่งประกาศมีรูปได้สูงสุด 10 รูป",
+          "error"
+        );
+
+        return;
+      }
+
+
+      newFiles.push(
+        ...selected
+      );
+
+
+      this.value =
+        "";
+
+
+      renderImages();
+
+    }
+  );
+
+
+function getNumberOrNull(
+  id
+) {
+
+  const value =
+    document
+      .getElementById(id)
+      .value
+      .trim();
+
+
+  return (
+    value === ""
+      ? null
+      : Number(value)
+  );
+}
+
+
+async function uploadImage(
+  file,
+  index
+) {
+
+  let extension =
+    file.name
+      .split(".")
+      .pop()
+      .toLowerCase()
+      .replace(
+        /[^a-z0-9]/g,
+        ""
+      );
+
+
+  if (
+    ![
+      "jpg",
+      "jpeg",
+      "png",
+      "webp"
+    ].includes(
+      extension
+    )
+  ) {
+
+    extension =
+      file.type === "image/png"
+        ? "png"
+        : file.type === "image/webp"
+          ? "webp"
+          : "jpg";
+
+  }
+
+
+  const path =
+    `${currentUser.id}/listings/${Date.now()}-${index}-${crypto.randomUUID()}.${extension}`;
+
+
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
+      .storage
+      .from(
+        "listing-images"
+      )
+      .upload(
+        path,
+        file,
+        {
+          cacheControl:
+            "31536000",
+
+          upsert:
+            false,
+
+          contentType:
+            file.type
+        }
+      );
+
+
+  if (error) {
+    throw new Error(
+      "อัปโหลดรูปไม่สำเร็จ: " +
+      error.message
+    );
+  }
+
+
+  newlyUploadedPaths.push(
+    data.path
+  );
+
+
+  const {
+    data: publicData
+  } =
+    supabaseClient
+      .storage
+      .from(
+        "listing-images"
+      )
+      .getPublicUrl(
+        data.path
+      );
+
+
+  return (
+    publicData.publicUrl
+  );
+}
+
+
+async function cleanupNewUploads() {
+
+  if (
+    newlyUploadedPaths.length ===
+    0
+  ) {
+    return;
+  }
+
+
+  await supabaseClient
+    .storage
+    .from(
+      "listing-images"
+    )
+    .remove(
+      newlyUploadedPaths
+    );
+
+
+  newlyUploadedPaths =
+    [];
+}
+
+
+document
+  .getElementById(
+    "editForm"
+  )
+  .addEventListener(
+    "submit",
+    async function(event) {
+
+      event.preventDefault();
+
+
+      const saveButton =
+        document.getElementById(
+          "saveButton"
+        );
+
+
+      const totalImages =
+        activeExisting().length +
+        newFiles.length;
+
+
+      if (
+        totalImages === 0
+      ) {
+
+        message(
+          "ต้องมีรูปอย่างน้อย 1 รูป",
+          "error"
+        );
+
+        return;
+      }
+
+
+      saveButton.disabled =
+        true;
+
+
+      newlyUploadedPaths =
+        [];
+
+
+      try {
+
+        const newUrls =
+          [];
+
+
+        for (
+          let i = 0;
+          i < newFiles.length;
+          i++
+        ) {
+
+          saveButton.textContent =
+            `กำลังอัปโหลดรูป ${i + 1}/${newFiles.length}...`;
+
+
+          const url =
+            await uploadImage(
+              newFiles[i],
+              i
+            );
+
+
+          newUrls.push(
+            url
+          );
+
+        }
+
+
+        const session =
+          await getSession();
+
+
+        if (!session) {
+          throw new Error(
+            "Session หมดอายุ กรุณา Login ใหม่"
+          );
+        }
+
+
+        saveButton.textContent =
+          "กำลังบันทึก...";
+
+
+        const payload = {
+
+          condo_name:
+            document
+              .getElementById(
+                "condoName"
+              )
+              .value
+              .trim(),
+
+          location:
+            document
+              .getElementById(
+                "location"
+              )
+              .value
+              .trim(),
+
+          price:
+            Number(
+              document
+                .getElementById(
+                  "price"
+                )
+                .value
+            ),
+
+          bedrooms:
+            getNumberOrNull(
+              "bedrooms"
+            ),
+
+          bathrooms:
+            getNumberOrNull(
+              "bathrooms"
+            ),
+
+          size_sqm:
+            getNumberOrNull(
+              "size"
+            ),
+
+          floor:
+            getNumberOrNull(
+              "floor"
+            ),
+
+          pet_dog:
+            document
+              .getElementById(
+                "petDog"
+              )
+              .checked,
+
+          pet_cat:
+            document
+              .getElementById(
+                "petCat"
+              )
+              .checked,
+
+          description:
+            document
+              .getElementById(
+                "description"
+              )
+              .value
+              .trim(),
+
+          contact:
+            document
+              .getElementById(
+                "contact"
+              )
+              .value
+              .trim(),
+
+          remove_image_ids:
+            Array.from(
+              removedImageIds
+            ),
+
+          new_image_urls:
+            newUrls
+        };
+
+
+        const response =
+          await fetch(
+            `/api/listing?id=${encodeURIComponent(listingId)}`,
+            {
+              method:
+                "PATCH",
+
+              headers: {
+                "Content-Type":
+                  "application/json",
+
+                Authorization:
+                  `Bearer ${session.access_token}`
+              },
+
+              body:
+                JSON.stringify(
+                  payload
+                )
+            }
+          );
+
+
+        const result =
+          await response.json();
+
+
+        if (!response.ok) {
+          throw new Error(
+            result.error ||
+            "บันทึกไม่สำเร็จ"
+          );
+        }
+
+
+        /*
+          API สำเร็จแล้ว
+          ค่อยลบไฟล์ Storage เก่า
+        */
+
+        const uniquePaths =
+          Array.from(
+            new Set(
+              removedStoragePaths
+            )
+          );
+
+
+        if (
+          uniquePaths.length > 0
+        ) {
+
+          const {
+            error
+          } =
+            await supabaseClient
+              .storage
+              .from(
+                "listing-images"
+              )
+              .remove(
+                uniquePaths
+              );
+
+
+          if (error) {
+            console.error(
+              "Delete image:",
+              error
+            );
+          }
+        }
+
+
+        newlyUploadedPaths =
+          [];
+
+
+        message(
+          "✅ บันทึกเรียบร้อย",
+          "success"
+        );
+
+
+        setTimeout(
+          function() {
+
+            window.location.href =
+              `/condo.html?id=${encodeURIComponent(listingId)}`;
+
+          },
+          700
+        );
+
+      }
+
+      catch(error) {
+
+        console.error(
+          error
+        );
+
+
+        await cleanupNewUploads();
+
+
+        message(
+          "❌ " +
+          error.message,
+          "error"
+        );
+
+
+        saveButton.disabled =
+          false;
+
+
+        saveButton.textContent =
+          "บันทึกการแก้ไข";
+      }
+
+    }
+  );
+
+
+initialize();
+
+</script>
+
+
+</body>
+
+</html>
